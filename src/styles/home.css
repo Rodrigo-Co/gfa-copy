@@ -1,0 +1,189 @@
+.home-container {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f4f4;
+  min-height: 100vh;
+}
+
+#navbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #027911;
+  padding: 10px 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+#nav_logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-left: 10px;
+}
+
+#nav_list {
+  display: flex;
+  list-style: none;
+  gap: 48px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.nav-item.active a {
+  color: #066c00;
+  border-bottom: 3px solid #008f47;
+}
+
+.nav-item a:hover {
+  color: #00942a;
+}
+
+.btn-default {
+  border: none;
+  background-color: #086615;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-default:hover {
+  background-color: #033c0a;
+}
+
+#home {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  padding-left: 10%;
+  color: #ffffff;
+}
+
+.hero-content {
+  text-align: left;
+}
+
+.hero-content h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+#cards-section {
+  display: flex;
+  justify-content: space-around;
+  padding: 40px 20px;
+  background-color: #ffffff;
+}
+
+.card {
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 45%;
+}
+
+.card h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 16px;
+  color: #333;
+  text-align: left;
+  line-height: 1.6;
+}
+
+.nossa-solucao {
+  background-color: #f3e5f5; /* Cor característica para Nossa Solução */
+}
+
+.nossa-equipe {
+  background-color: #f3e5f5; /* Cor característica para Nossa Equipe */
+}
+
+.projeto-card {
+  background-color: #e0f7fa; /* Cor característica para o card do projeto */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+#projeto, #equipe, #contato {
+  padding: 40px 20px;
+  background-color: #ffffff;
+  text-align: center;
+}
+
+#projeto h2, #equipe h2, #contato h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+#projeto p, #equipe p, #contato p {
+  font-size: 18px;
+  color: #333;
+}
+
+.team-description {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #027911;
+  color: #ffffff;
+  margin-top: 40px;
+}

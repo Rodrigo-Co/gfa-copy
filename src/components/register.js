@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/register.css'; 
 
 const Register = () => {
@@ -8,6 +9,7 @@ const Register = () => {
   const [cpf, setCpf] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const navigate = useNavigate(); 
 
   const formatCPF = (value) => {
     const cleaned = value.replace(/\D/g, '');
@@ -46,6 +48,7 @@ const Register = () => {
 
     if (response.ok) {
       alert('Usuário registrado com sucesso!');
+      navigate('/'); 
     } else {
       alert('Erro ao registrar usuário.');
     }

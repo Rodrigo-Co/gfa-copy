@@ -9,7 +9,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     
-    // Enviar dados para o servidor
+    
     const response = await fetch('http://localhost:5000/', {
       method: 'POST',
       headers: {
@@ -20,7 +20,6 @@ const Login = () => {
 
     if (response.ok) {
       alert('Login bem-sucedido!');
-      // Aqui você pode redirecionar o usuário ou armazenar um token, se necessário
     } else {
       const errorMessage = await response.text();
       setLoginError(errorMessage);
