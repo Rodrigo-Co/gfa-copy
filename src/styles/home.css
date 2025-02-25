@@ -112,15 +112,15 @@
 }
 
 .nossa-solucao {
-  background-color: #f3e5f5; /* Cor característica para Nossa Solução */
+  background-color: #f3e5f5;
 }
 
 .nossa-equipe {
-  background-color: #f3e5f5; /* Cor característica para Nossa Equipe */
+  background-color: #f3e5f5; 
 }
 
 .projeto-card {
-  background-color: #e0f7fa; /* Cor característica para o card do projeto */
+  background-color: #e0f7fa;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
