@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importe o useNavigate
+import { useNavigate } from 'react-router-dom'; 
 import 'bootstrap/dist/css/bootstrap.css';
 import '../styles/home.css';
-import backgroundImage from '../assets/agro.jpg'; // Substitua pelo caminho da sua imagem de fundo
+import backgroundImage from '../assets/agro.jpg'; 
 
 const Home = () => {
   const [activeSection, setActiveSection] = useState('home');
-  const navigate = useNavigate(); // Hook para navegação
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,16 +28,15 @@ const Home = () => {
   };
 
   const handleUserPageClick = () => {
-    navigate('/'); // Redireciona para a rota /home
+    navigate('/'); 
   };
 
   const handleSaibaMaisClick = () => {
-    navigate('/'); // Redireciona para a rota / (página inicial)
+    navigate('/'); 
   };
 
   return (
     <div className="home-container">
-      {/* Navbar */}
       <nav id='navbar'>
         <i id="nav_logo">GFA</i>
 
@@ -58,7 +57,6 @@ const Home = () => {
         </button>
       </nav>
 
-      {/* Hero Section */}
       <section id="home" style={{ backgroundImage: `url(${backgroundImage})` }}>
         <div className="hero-content">
           <div className="hero-text">
@@ -67,8 +65,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-      {/* Cards Section */}
+    
       <section id="cards-section">
         <div className="card nossa-solucao">
           <h2>Nossa Solução</h2>
@@ -91,7 +88,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Sobre o Projeto */}
       <section id="projeto">
         <h2>Sobre o Projeto - Sistema de Detecção e Alerta de Queimadas</h2>
         <div className="card projeto-card">
@@ -125,7 +121,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Nossa Equipe */}
       <section id="equipe">
         <h2>Nossa Equipe</h2>
         <div className="team-description">
@@ -138,7 +133,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Contatos */}
       <section id="contato">
         <h2>Contatos</h2>
         <form className="contact-form">
@@ -162,7 +156,6 @@ const Home = () => {
         </form>
       </section>
 
-      {/* Footer */}
       <footer>
         <p>&copy; 2025 GFA - Todos os direitos reservados.</p>
       </footer>
