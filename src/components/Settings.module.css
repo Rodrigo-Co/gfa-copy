@@ -1,0 +1,178 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #343a40;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.backButton:hover {
+  background-color: #e9ecef;
+}
+
+.backButton i {
+  margin-right: 8px;
+  font-size: 1.2rem;
+}
+
+.settingsContainer {
+  display: flex;
+  flex: 1;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #343a40;
+  padding: 20px 0;
+}
+
+.tabButton {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 15px 20px;
+  background: none;
+  border: none;
+  color: #dddce5;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tabButton i {
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+.tabButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.tabButton.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: bold;
+}
+
+.content {
+  flex: 1;
+  padding: 30px;
+}
+
+.tabContent h2 {
+  color: #343a40;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.form {
+  max-width: 500px;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #495057;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.formGroup input:focus {
+  border-color: #80bdff;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.formGroup input[disabled] {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.submitButton {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submitButton:hover {
+  background-color: #0069d9;
+}
+
+.cancelButton {
+  padding: 10px 20px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cancelButton:hover {
+  background-color: #5a6268;
+}
+
+@media (max-width: 768px) {
+  .settingsContainer {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    display: flex;
+    padding: 0;
+  }
+  
+  .tabButton {
+    justify-content: center;
+    padding: 15px 10px;
+  }
+  
+  .content {
+    padding: 20px;
+  }
+}

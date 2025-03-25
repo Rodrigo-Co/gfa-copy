@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import { useNavigate } from 'react-router-dom';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,7 +16,6 @@ import {
 } from 'chart.js';
 import styles from './Dashboard.module.css';
 
-// Registrar componentes do ChartJS
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -29,7 +29,7 @@ ChartJS.register(
 );
 
 const supabaseUrl = 'https://zgeyiibklawawnycftcj.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpnZXlpaWJrbGF3YXdueWNmdGNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE3MzU5NzgsImV4cCI6MjA1NzMxMTk3OH0.EEaLBh-TuF8zzuKrQK6ExrvlwosIZuGmr6n6m1WVaWE';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpnZXlpaWJrbGF3YXdueWNmdGNqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MTczNTk3OCwiZXhwIjoyMDU3MzExOTc4fQ.7E3_tHVeIxPE3tQWcU26K1jx7cYsyUzWwvfHNpeMGi4';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const Dashboard = () => {
@@ -39,15 +39,16 @@ const Dashboard = () => {
   const [userName, setUserName] = useState('Visitante');
   const [fileCount, setFileCount] = useState(0);
   const [peopleCount, setPeopleCount] = useState(1);
+  const navigate = useNavigate();
 
-  // Dados de exemplo para os gráficos (substitua com seus dados reais)
+  // Configuração dos gráficos
   const [chartData, setChartData] = useState({
     mainChart: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'],
       datasets: [
         {
           label: 'Temperatura (°C)',
-          data: [12, 19, 3, 5, 2, 3],
+          data: [],
           backgroundColor: '#0d6efd',
           borderColor: 'transparent',
           borderWidth: 2.5,
@@ -55,7 +56,7 @@ const Dashboard = () => {
         },
         {
           label: 'Umidade (%)',
-          data: [8, 15, 7, 12, 9, 10],
+          data: [],
           backgroundColor: '#dc3545',
           borderColor: 'transparent',
           borderWidth: 2.5,
@@ -68,7 +69,7 @@ const Dashboard = () => {
       datasets: [
         {
           label: 'Qualidade do ar (%)',
-          data: [65, 59, 80, 81, 56, 55, 40],
+          data: [],
           lineTension: 0.2,
           borderColor: '#d9534f',
           borderWidth: 1.5,
@@ -77,29 +78,13 @@ const Dashboard = () => {
       ]
     },
     multiLineChart: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
       datasets: [
         {
-          label: '2023',
-          data: [12, 19, 3, 5, 2, 3],
+          label: 'Temperatura',
+          data: [],
           lineTension: 0,
           borderColor: '#d9534f',
-          borderWidth: 1.5,
-          backgroundColor: 'transparent'
-        },
-        {
-          label: '2022',
-          data: [8, 15, 7, 12, 9, 10],
-          lineTension: 0,
-          borderColor: '#00FF00',
-          borderWidth: 1.5,
-          backgroundColor: 'transparent'
-        },
-        {
-          label: '2021',
-          data: [15, 10, 12, 8, 14, 6],
-          lineTension: 0,
-          borderColor: '#00FFFF',
           borderWidth: 1.5,
           backgroundColor: 'transparent'
         }
@@ -134,10 +119,10 @@ const Dashboard = () => {
         display: true,
         position: 'top',
         labels: {
+          color: '#343a40',
           boxWidth: 20,
           fontSize: 12,
           padding: 10,
-          color: '#ffffff'
         },
       },
     },
@@ -147,15 +132,15 @@ const Dashboard = () => {
           display: false,
         },
         ticks: {
-          color: '#ffffff'
+          color: '#343a40'
         }
       },
       y: {
         grid: {
-          color: 'rgba(255, 255, 255, 0.1)'
+          color: 'rgba(0, 0, 0, 0.1)'
         },
         ticks: {
-          color: '#ffffff'
+          color: '#343a40'
         }
       },
     },
@@ -169,7 +154,7 @@ const Dashboard = () => {
         display: true,
         position: 'right',
         labels: {
-          color: '#ffffff'
+          color: '#343a40'
         }
       }
     }
@@ -182,21 +167,52 @@ const Dashboard = () => {
         .select('*')
         .order('timestamp', { ascending: false })
         .limit(10);
-
+  
       if (error) throw error;
-
-      setSensorData(data);
+  
+      setSensorData(data || []);
+      
+      // Atualizar gráficos com dados reais
+      if (data && data.length > 0) {
+        // Criar cópias invertidas dos arrays para mostrar do mais antigo para o mais recente
+        const reversedData = [...data].reverse();
+        
+        const temps = reversedData.map(item => item.temperatura);
+        const humids = reversedData.map(item => item.umidade);
+        const airQualities = reversedData.map(item => item.qualidade_do_ar);
+        const labels = reversedData.map(item => 
+          new Date(item.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        );
+  
+        setChartData(prev => ({
+          ...prev,
+          mainChart: {
+            ...prev.mainChart,
+            labels,
+            datasets: [
+              { ...prev.mainChart.datasets[0], data: temps },
+              { ...prev.mainChart.datasets[1], data: humids }
+            ]
+          },
+          lineChart: {
+            ...prev.lineChart,
+            labels,
+            datasets: [
+              { ...prev.lineChart.datasets[0], data: airQualities }
+            ]
+          }
+        }));
+      }
+  
       setLoading(false);
     } catch (err) {
       setError(err.message);
       setLoading(false);
     }
   };
-
-  // Buscar dados do usuário
   const fetchUserData = async () => {
     try {
-//Simulando
+      // Substitua por chamada real à sua API
       const mockUserData = { success: true, nome: "Usuário Teste" };
       if (mockUserData.success) {
         setUserName(mockUserData.nome);
@@ -206,10 +222,9 @@ const Dashboard = () => {
     }
   };
 
-  // Buscar contagem de arquivos
   const fetchFileCount = async () => {
     try {
-      // Simulando
+      // Substitua por chamada real à sua API
       const mockFileCount = { count: 1 };
       setFileCount(mockFileCount.count);
     } catch (err) {
@@ -217,10 +232,9 @@ const Dashboard = () => {
     }
   };
 
-  // Buscar contagem de pessoas
   const fetchPeopleCount = async () => {
     try {
-      // Simulando 
+      // Substitua por chamada real à sua API
       const mockPeopleCount = { pessoas: 2 };
       setPeopleCount(mockPeopleCount.pessoas);
     } catch (err) {
@@ -233,6 +247,10 @@ const Dashboard = () => {
     fetchUserData();
     fetchFileCount();
     fetchPeopleCount();
+
+    // Atualizar dados a cada 30 segundos
+    const interval = setInterval(fetchSensorData, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) return <div className={styles.loading}>Carregando...</div>;
@@ -250,38 +268,30 @@ const Dashboard = () => {
             alt="User"
           />
           <div className={styles.userInfo}>
-            <h5>
-              <a href="#" className={styles.userName}>{userName}</a>
-            </h5>
-            <p>Leitor do consumo.</p>
+            <h5 className={styles.userName}>{userName}</h5>
+            <p>Leitor do consumo</p>
           </div>
         </div>
 
         <ul className={styles.sidebarMenu}>
           <li className={styles.menuItem}>
-            <i className="uil-estate"></i>
-            <a href="#">Dashboard</a>
-            <ul className={styles.subMenu}>
-              <li><a href="#myChart">Balanço do consumo</a></li>
-              <li><a href="#myChart2">Consumo de energia</a></li>
-              <li><a href="#donutChart">Gasto por estação</a></li>
-              <li><a href="#chart3">Balanço anual</a></li>
-            </ul>
+            <i className="uil uil-estate"></i>
+            <span>Dashboard</span>
           </li>
           <li className={styles.menuItem}>
-            <i className="uil-calendar-alt"></i>
+            <i className="uil uil-calendar-alt"></i>
             <a href="https://www.supercalendario.com.br/2024" target="_blank" rel="noopener noreferrer">Calendário</a>
           </li>
           <li className={styles.menuItem}>
-            <i className="uil-envelope-download"></i>
+            <i className="uil uil-envelope"></i>
             <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer">E-mails</a>
           </li>
           <li className={styles.menuItem}>
-            <i className="uil-setting"></i>
-            <a href="#">Configurações</a>
+            <i className="uil uil-cog"></i>
+            <button onClick={() => navigate('/settings')}>Configurações</button>
           </li>
           <li className={styles.menuItem}>
-            <i className="uil-map-marker"></i>
+            <i className="uil uil-map-marker"></i>
             <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">Mapa</a>
           </li>
         </ul>
@@ -296,32 +306,38 @@ const Dashboard = () => {
           <div className={styles.navbarMenu}>
             <ul className={styles.navItems}>
               <li className={styles.navItemDropdown}>
-                <a className={styles.navLinkDropdown} href="#">
-                  Menu
-                </a>
+                <button className={styles.navLinkDropdown}>
+                  Menu <i className="uil uil-angle-down"></i>
+                </button>
                 <ul className={styles.dropdownMenu}>
-                  <li><a href="#">Minha Conta</a></li>
-                  <li><a href="https://mail.google.com" target="_blank" rel="noopener noreferrer">Mensagens</a></li>
-                  <li><a href="/ajuda_pdf.pdf" target="_blank" rel="noopener noreferrer">Ajuda</a></li>
+                  <li>
+                    <button onClick={() => navigate('/settings')}>
+                      <i className="uil uil-user-circle"></i> Minha Conta
+                    </button>
+                  </li>
+                  <li>
+                    <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer">
+                      <i className="uil uil-envelope"></i> Mensagens
+                    </a>
+                  </li>
                   <li className={styles.divider}></li>
-                  <li><a href="#">Desconectar</a></li>
+                  <li>
+                    <button>
+                      <i className="uil uil-sign-out-alt"></i> Desconectar
+                    </button>
+                  </li>
                 </ul>
               </li>
               <li className={styles.navItem}>
-                <a className={styles.navLink} href="https://mail.google.com" target="_blank" rel="noopener noreferrer">
-                  <i className="uil-comments-alt"></i>
+                <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer" className={styles.navLink}>
+                  <i className="uil uil-comment-alt"></i>
                 </a>
               </li>
               <li className={styles.navItem}>
-                <a className={styles.navLink} href="#">
-                  <i className="uil-bell"></i>
+                <button className={styles.navLink}>
+                  <i className="uil uil-bell"></i>
                   <span>0</span>
-                </a>
-              </li>
-              <li className={styles.navItem}>
-                <a className={styles.navLink} href="#">
-                  <i className="uil-bars"></i>
-                </a>
+                </button>
               </li>
             </ul>
           </div>
@@ -330,28 +346,28 @@ const Dashboard = () => {
         <div className={styles.dashboardContent}>
           <div className={styles.welcomeBanner}>
             <h1>Bem vindo ao Dashboard</h1>
-            <p>Olá, bem vindo ao seu dashboard!</p>
+            <p>Olá, {userName}, bem vindo ao seu dashboard!</p>
           </div>
 
           <section className={styles.statsSection}>
             <div className={styles.statsRow}>
-              <div className={styles.statCardPrimary}>
-                <i className="uil-eye"></i>
+              <div className={styles.statCard}>
+                <i className="uil uil-temperature"></i>
                 <h3>{latestData.temperatura || '--'}°C</h3>
                 <p>Temperatura</p>
               </div>
-              <div className={styles.statCardDanger}>
-                <i className="uil-estate"></i>
+              <div className={styles.statCard}>
+                <i className="uil uil-tear"></i>
                 <h3>{latestData.umidade || '--'}%</h3>
                 <p>Umidade</p>
               </div>
-              <div className={styles.statCardWarning}>
-                <i className="uil-bell"></i>
+              <div className={styles.statCard}>
+                <i className="uil uil-wind"></i>
                 <h3>{latestData.qualidade_do_ar || '--'}%</h3>
                 <p>Qualidade do ar</p>
               </div>
-              <div className={styles.statCardSuccess}>
-                <i className="uil-calendar-alt"></i>
+              <div className={styles.statCard}>
+                <i className="uil uil-clock"></i>
                 <h3>{latestData.timestamp ? new Date(latestData.timestamp).toLocaleTimeString() : '--:--'}</h3>
                 <p>Última atualização</p>
               </div>
@@ -361,13 +377,13 @@ const Dashboard = () => {
           <section className={styles.chartsSection}>
             <div className={styles.chartRow}>
               <div className={styles.chartContainer}>
-                <h3>Balanço dos picos de temperatura e umidade na semana</h3>
+                <h3>Balanço dos picos de temperatura e umidade</h3>
                 <div className={styles.chartWrapper}>
                   <Bar data={chartData.mainChart} options={chartOptions} />
                 </div>
               </div>
               <div className={styles.chartContainer}>
-                <h3>Qualidade do ar na semana</h3>
+                <h3>Qualidade do ar</h3>
                 <div className={styles.chartWrapper}>
                   <Line data={chartData.lineChart} options={chartOptions} />
                 </div>
@@ -377,7 +393,7 @@ const Dashboard = () => {
 
           <section className={styles.doughnutSection}>
             <div className={styles.doughnutCard}>
-              <h3>Média de temperatura por estação do ano</h3>
+              <h3>Média por estação do ano</h3>
               <div className={styles.doughnutWrapper}>
                 <Doughnut data={chartData.doughnutChart} options={doughnutOptions} />
               </div>
@@ -387,27 +403,27 @@ const Dashboard = () => {
           <section className={styles.bottomStatsSection}>
             <div className={styles.statsRow}>
               <div className={styles.statBox}>
-                <i className="uil-envelope-shield"></i>
+                <i className="uil uil-comment-exclamation"></i>
                 <div>
                   <h3>0</h3>
                   <span>Comunicados</span>
-                  <p>Comunicados dos riscos de incêndio nas últimas 24 horas</p>
+                  <p>Riscos de incêndio nas últimas 24 horas</p>
                 </div>
               </div>
               <div className={styles.statBox}>
-                <i className="uil-file"></i>
+                <i className="uil uil-server-network"></i>
                 <div>
                   <h3>{fileCount}</h3>
-                  <span>Nó</span>
-                  <p>Quantidade de Nó de comunicação dos sensores</p>
+                  <span>Nós</span>
+                  <p>Nós de comunicação ativos</p>
                 </div>
               </div>
               <div className={styles.statBox}>
-                <i className="uil-users-alt"></i>
+                <i className="uil uil-users-alt"></i>
                 <div>
                   <h3>{peopleCount}</h3>
                   <span>Pessoas</span>
-                  <p>Quantidade de pessoas na residência</p>
+                  <p>Na residência</p>
                 </div>
               </div>
             </div>
@@ -415,7 +431,7 @@ const Dashboard = () => {
 
           <section className={styles.multiLineChartSection}>
             <div className={styles.multiLineChartContainer}>
-              <h3>Balanço nos últimos 7 dias</h3>
+              <h3>Balanço nos últimos dias</h3>
               <div className={styles.chartWrapper}>
                 <Line data={chartData.multiLineChart} options={chartOptions} />
               </div>
