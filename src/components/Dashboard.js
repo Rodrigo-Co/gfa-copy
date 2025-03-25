@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import { Line, Bar } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
 import {
   Chart as ChartJS,
@@ -9,7 +9,6 @@ import {
   PointElement,
   LineElement,
   BarElement,
-  ArcElement,
   Title,
   Tooltip,
   Legend,
@@ -22,7 +21,6 @@ ChartJS.register(
   PointElement,
   LineElement,
   BarElement,
-  ArcElement,
   Title,
   Tooltip,
   Legend
@@ -32,19 +30,32 @@ const supabaseUrl = 'https://zgeyiibklawawnycftcj.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpnZXlpaWJrbGF3YXdueWNmdGNqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MTczNTk3OCwiZXhwIjoyMDU3MzExOTc4fQ.7E3_tHVeIxPE3tQWcU26K1jx7cYsyUzWwvfHNpeMGi4';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+const formatCorrectTime = (timestamp) => {
+  if (!timestamp) return '--:--';
+  
+  const date = new Date(timestamp);
+  let horas = date.getHours() + 3; // Adiciona 3 horas
+  const minutos = date.getMinutes().toString().padStart(2, "0");
+
+  // Ajusta para o formato 24h caso ultrapasse
+  if (horas >= 24) horas -= 24;
+  if (horas < 0) horas += 24;
+
+  return `${horas.toString().padStart(2, "0")}:${minutos}h`;
+};
+
 const Dashboard = () => {
   const [sensorData, setSensorData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userName, setUserName] = useState('Visitante');
+  const [userName, setUserName] = useState(localStorage.getItem('userName') || 'Visitante');
   const [fileCount, setFileCount] = useState(0);
-  const [peopleCount, setPeopleCount] = useState(1);
+  const [peopleCount, setPeopleCount] = useState(localStorage.getItem('peopleCount') || 1);
   const navigate = useNavigate();
 
-  // Configuração dos gráficos
   const [chartData, setChartData] = useState({
     mainChart: {
-      labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'],
+      labels: [],
       datasets: [
         {
           label: 'Temperatura (°C)',
@@ -65,7 +76,7 @@ const Dashboard = () => {
       ],
     },
     lineChart: {
-      labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'],
+      labels: [],
       datasets: [
         {
           label: 'Qualidade do ar (%)',
@@ -76,38 +87,6 @@ const Dashboard = () => {
           backgroundColor: 'transparent'
         }
       ]
-    },
-    multiLineChart: {
-      labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-      datasets: [
-        {
-          label: 'Temperatura',
-          data: [],
-          lineTension: 0,
-          borderColor: '#d9534f',
-          borderWidth: 1.5,
-          backgroundColor: 'transparent'
-        }
-      ]
-    },
-    doughnutChart: {
-      labels: ['Verão', 'Outono', 'Inverno', 'Primavera'],
-      datasets: [{
-        data: [300, 200, 150, 250],
-        backgroundColor: [
-          'rgb(247, 110, 19)',
-          'rgba(247, 231, 19, 0.932)',
-          'rgb(54, 162, 235)',
-          'rgb(46, 155, 2)'
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1.5)',
-          'rgba(255, 206, 86, 1.5)',
-          'rgba(54, 162, 235, 1.5)',
-          'rgba(35, 124, 0, 1.5)'
-        ],
-        borderWidth: 1
-      }]
     }
   });
 
@@ -146,20 +125,6 @@ const Dashboard = () => {
     },
   };
 
-  const doughnutOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'right',
-        labels: {
-          color: '#343a40'
-        }
-      }
-    }
-  };
-
   const fetchSensorData = async () => {
     try {
       const { data, error } = await supabase
@@ -167,55 +132,74 @@ const Dashboard = () => {
         .select('*')
         .order('timestamp', { ascending: false })
         .limit(10);
-  
+
       if (error) throw error;
-  
+
       setSensorData(data || []);
       
-      // Atualizar gráficos com dados reais
       if (data && data.length > 0) {
-        // Criar cópias invertidas dos arrays para mostrar do mais antigo para o mais recente
         const reversedData = [...data].reverse();
         
         const temps = reversedData.map(item => item.temperatura);
         const humids = reversedData.map(item => item.umidade);
         const airQualities = reversedData.map(item => item.qualidade_do_ar);
-        const labels = reversedData.map(item => 
-          new Date(item.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-        );
-  
-        setChartData(prev => ({
-          ...prev,
+        
+        const labels = reversedData.map(item => {
+          const date = new Date(item.timestamp);
+          let horas = date.getHours() + 3; // Adiciona 3 horas
+          const minutos = date.getMinutes().toString().padStart(2, "0");
+
+          if (horas >= 24) horas -= 24;
+          if (horas < 0) horas += 24;
+
+          return `${horas.toString().padStart(2, "0")}:${minutos}h`;
+        });
+
+        setChartData({
           mainChart: {
-            ...prev.mainChart,
             labels,
             datasets: [
-              { ...prev.mainChart.datasets[0], data: temps },
-              { ...prev.mainChart.datasets[1], data: humids }
+              { ...chartData.mainChart.datasets[0], data: temps },
+              { ...chartData.mainChart.datasets[1], data: humids }
             ]
           },
           lineChart: {
-            ...prev.lineChart,
             labels,
             datasets: [
-              { ...prev.lineChart.datasets[0], data: airQualities }
+              { ...chartData.lineChart.datasets[0], data: airQualities }
             ]
           }
-        }));
+        });
       }
-  
+
       setLoading(false);
     } catch (err) {
       setError(err.message);
       setLoading(false);
     }
   };
+
   const fetchUserData = async () => {
     try {
-      // Substitua por chamada real à sua API
-      const mockUserData = { success: true, nome: "Usuário Teste" };
-      if (mockUserData.success) {
-        setUserName(mockUserData.nome);
+      const email = localStorage.getItem('userEmail');
+      if (email) {
+        const response = await fetch('http://localhost:5000/user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email })
+        });
+        
+        if (response.ok) {
+          const userData = await response.json();
+          setUserName(userData.name);
+          localStorage.setItem('userName', userData.name);
+          if (userData.peopleCount) {
+            setPeopleCount(userData.peopleCount);
+            localStorage.setItem('peopleCount', userData.peopleCount);
+          }
+        }
       }
     } catch (err) {
       console.error('Erro ao buscar dados do usuário:', err);
@@ -224,7 +208,6 @@ const Dashboard = () => {
 
   const fetchFileCount = async () => {
     try {
-      // Substitua por chamada real à sua API
       const mockFileCount = { count: 1 };
       setFileCount(mockFileCount.count);
     } catch (err) {
@@ -232,23 +215,11 @@ const Dashboard = () => {
     }
   };
 
-  const fetchPeopleCount = async () => {
-    try {
-      // Substitua por chamada real à sua API
-      const mockPeopleCount = { pessoas: 2 };
-      setPeopleCount(mockPeopleCount.pessoas);
-    } catch (err) {
-      console.error('Erro ao buscar contagem de pessoas:', err);
-    }
-  };
-
   useEffect(() => {
     fetchSensorData();
     fetchUserData();
     fetchFileCount();
-    fetchPeopleCount();
 
-    // Atualizar dados a cada 30 segundos
     const interval = setInterval(fetchSensorData, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -257,6 +228,7 @@ const Dashboard = () => {
   if (error) return <div className={styles.error}>Erro: {error}</div>;
 
   const latestData = sensorData[0] || {};
+  const lastUpdateTime = formatCorrectTime(latestData.timestamp);
 
   return (
     <div className={styles.dashboardWrapper}>
@@ -368,7 +340,7 @@ const Dashboard = () => {
               </div>
               <div className={styles.statCard}>
                 <i className="uil uil-clock"></i>
-                <h3>{latestData.timestamp ? new Date(latestData.timestamp).toLocaleTimeString() : '--:--'}</h3>
+                <h3>{lastUpdateTime}</h3>
                 <p>Última atualização</p>
               </div>
             </div>
@@ -387,15 +359,6 @@ const Dashboard = () => {
                 <div className={styles.chartWrapper}>
                   <Line data={chartData.lineChart} options={chartOptions} />
                 </div>
-              </div>
-            </div>
-          </section>
-
-          <section className={styles.doughnutSection}>
-            <div className={styles.doughnutCard}>
-              <h3>Média por estação do ano</h3>
-              <div className={styles.doughnutWrapper}>
-                <Doughnut data={chartData.doughnutChart} options={doughnutOptions} />
               </div>
             </div>
           </section>
@@ -425,15 +388,6 @@ const Dashboard = () => {
                   <span>Pessoas</span>
                   <p>Na residência</p>
                 </div>
-              </div>
-            </div>
-          </section>
-
-          <section className={styles.multiLineChartSection}>
-            <div className={styles.multiLineChartContainer}>
-              <h3>Balanço nos últimos dias</h3>
-              <div className={styles.chartWrapper}>
-                <Line data={chartData.multiLineChart} options={chartOptions} />
               </div>
             </div>
           </section>

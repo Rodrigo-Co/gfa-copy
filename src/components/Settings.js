@@ -10,16 +10,27 @@ const Settings = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Simular busca de dados do usuário
     const fetchUserData = async () => {
       try {
-        // Substitua por chamada real à sua API
-        const mockUserData = { nome: "Usuário Teste", email: "usuario@teste.com" };
-        setName(mockUserData.nome);
-        setEmail(mockUserData.email);
-        
-        const mockPeopleCount = { pessoas: 2 };
-        setPeopleCount(mockPeopleCount.pessoas);
+        const email = localStorage.getItem('userEmail');
+        if (email) {
+          const response = await fetch('http://localhost:5000/user', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email })
+          });
+          
+          if (response.ok) {
+            const userData = await response.json();
+            setName(userData.name);
+            setEmail(userData.email);
+            if (userData.peopleCount) {
+              setPeopleCount(userData.peopleCount);
+            }
+          }
+        }
       } catch (err) {
         console.error('Erro ao buscar dados:', err);
       }
@@ -31,9 +42,21 @@ const Settings = () => {
   const handleSubmitProfile = async (e) => {
     e.preventDefault();
     try {
-      // Substitua por chamada real à sua API
-      console.log('Dados atualizados:', { name });
-      alert('Perfil atualizado com sucesso!');
+      const email = localStorage.getItem('userEmail');
+      const response = await fetch('http://localhost:5000/update-profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, name })
+      });
+
+      if (response.ok) {
+        localStorage.setItem('userName', name);
+        alert('Perfil atualizado com sucesso!');
+      } else {
+        throw new Error('Erro ao atualizar perfil');
+      }
     } catch (err) {
       console.error('Erro ao atualizar perfil:', err);
       alert('Erro ao atualizar perfil');
@@ -43,9 +66,21 @@ const Settings = () => {
   const handleSubmitSettings = async (e) => {
     e.preventDefault();
     try {
-      // Substitua por chamada real à sua API
-      console.log('Pessoas na casa:', peopleCount);
-      alert('Configurações salvas com sucesso!');
+      const email = localStorage.getItem('userEmail');
+      const response = await fetch('http://localhost:5000/update-settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, peopleCount })
+      });
+
+      if (response.ok) {
+        localStorage.setItem('peopleCount', peopleCount);
+        alert('Configurações salvas com sucesso!');
+      } else {
+        throw new Error('Erro ao salvar configurações');
+      }
     } catch (err) {
       console.error('Erro ao salvar configurações:', err);
       alert('Erro ao salvar configurações');

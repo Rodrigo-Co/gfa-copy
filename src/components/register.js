@@ -9,6 +9,7 @@ const Register = () => {
   const [cpf, setCpf] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [registerError, setRegisterError] = useState('');
   const navigate = useNavigate(); 
 
   const formatCPF = (value) => {
@@ -29,7 +30,6 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     
-    // Validação do email
     if (!validateEmail(email)) {
       setEmailError('Por favor, insira um email válido.');
       return;
@@ -37,20 +37,26 @@ const Register = () => {
       setEmailError('');
     }
 
-    // Enviar dados para o servidor
-    const response = await fetch('http://localhost:5000/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, senha: password, cpf }),
-    });
+    try {
+      const response = await fetch('http://localhost:5000/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, senha: password, cpf }),
+      });
 
-    if (response.ok) {
-      alert('Usuário registrado com sucesso!');
-      navigate('/'); 
-    } else {
-      alert('Erro ao registrar usuário.');
+      const data = await response.json();
+      
+      if (response.ok) {
+        localStorage.setItem('userName', name);
+        localStorage.setItem('userEmail', email);
+        navigate('/dashboard');
+      } else {
+        setRegisterError(data.message || 'Erro ao registrar usuário.');
+      }
+    } catch (err) {
+      setRegisterError('Erro ao conectar com o servidor');
     }
   };
 
@@ -85,7 +91,7 @@ const Register = () => {
           placeholder="CPF"
           value={cpf}
           onChange={(e) => setCpf(formatCPF(e.target.value))}
-          maxLength={14} // Limita a 14 caracteres (formato xxx.xxx.xxx-xx)
+          maxLength={14}
           required
         />
         <div className="terms-container">
@@ -100,6 +106,7 @@ const Register = () => {
           </label>
         </div>
         <button type="submit">Registrar</button>
+        {registerError && <span style={{ color: 'red', marginTop: '10px' }}>{registerError}</span>}
       </form>
     </div>
   );

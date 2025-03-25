@@ -1,28 +1,40 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     
-    
-    const response = await fetch('http://localhost:5000/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, senha: password }),
-    });
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, senha: password })
+      });
 
-    if (response.ok) {
-      alert('Login bem-sucedido!');
-    } else {
-      const errorMessage = await response.text();
-      setLoginError(errorMessage);
+      if (response.ok) {
+        const userData = await response.json();
+        localStorage.setItem('userName', userData.name);
+        localStorage.setItem('userEmail', email);
+        if (userData.peopleCount) {
+          localStorage.setItem('peopleCount', userData.peopleCount);
+        }
+        navigate('/dashboard');
+      } else {
+        const errorMessage = await response.text();
+        setLoginError(errorMessage);
+      }
+    } catch (error) {
+      console.error('Erro ao fazer login:', error);
+      setLoginError('Erro ao conectar com o servidor');
     }
   };
 
