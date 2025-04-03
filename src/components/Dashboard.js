@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { Line, Bar } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
@@ -125,7 +125,7 @@ const Dashboard = () => {
     },
   };
 
-  const fetchSensorData = async () => {
+  const fetchSensorData = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('sensor_data')
@@ -177,7 +177,7 @@ const Dashboard = () => {
       setError(err.message);
       setLoading(false);
     }
-  };
+  }, []);
 
   const fetchUserData = async () => {
     try {
