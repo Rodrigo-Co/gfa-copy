@@ -222,7 +222,7 @@ const Dashboard = () => {
 
     const interval = setInterval(fetchSensorData, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchSensorData]);
 
   if (loading) return <div className={styles.loading}>Carregando...</div>;
   if (error) return <div className={styles.error}>Erro: {error}</div>;
