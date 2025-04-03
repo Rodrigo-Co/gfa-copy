@@ -155,21 +155,21 @@ const Dashboard = () => {
           return `${horas.toString().padStart(2, "0")}:${minutos}h`;
         });
 
-        setChartData({
+        setChartData(prevData => ({
           mainChart: {
             labels,
             datasets: [
-              { ...chartData.mainChart.datasets[0], data: temps },
-              { ...chartData.mainChart.datasets[1], data: humids }
+              { ...prevData.mainChart.datasets[0], data: temps },
+              { ...prevData.mainChart.datasets[1], data: humids }
             ]
           },
           lineChart: {
             labels,
             datasets: [
-              { ...chartData.lineChart.datasets[0], data: airQualities }
+              { ...prevData.lineChart.datasets[0], data: airQualities }
             ]
           }
-        });
+        }));
       }
 
       setLoading(false);
@@ -177,7 +177,7 @@ const Dashboard = () => {
       setError(err.message);
       setLoading(false);
     }
-  }, []);
+  }, [chartData]);
 
   const fetchUserData = async () => {
     try {
