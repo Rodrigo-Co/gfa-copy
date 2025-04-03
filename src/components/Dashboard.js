@@ -177,7 +177,7 @@ const Dashboard = () => {
       setError(err.message);
       setLoading(false);
     }
-  }, [chartData]);
+  }, []);
 
   const fetchUserData = async () => {
     try {
