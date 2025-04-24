@@ -238,7 +238,10 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboardWrapper}>
-       {/* Sidebar */}
+       
+
+      <section className={`${styles.mainContent} ${isOpen ? styles.sidebarOpen : styles.sidebarClosed}`}>
+        {/* Sidebar */}
        <aside className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed}`}>
         <div className={styles.sidebarHeader}>
           <img
@@ -275,11 +278,7 @@ const Dashboard = () => {
           </li>
         </ul>
 
-        
-       
       </aside>
-
-      <section className={`${styles.mainContent} ${isOpen ? styles.sidebarOpen : styles.sidebarClosed}`}>
         <nav className={styles.navbar}>
         <i className={`uil uil-bars ${styles.toggleButton}`} onClick={toggleSidebar} title={isOpen ? 'Fechar Sidebar' : 'Abrir Sidebar'}></i>
           <div className={styles.navbarBrand}>
