@@ -141,7 +141,7 @@
 }
 
 .navLink {
-  color: #343a40;
+  color: #e2e2e2;
   text-decoration: none;
   font-size: 1.1rem;
   display: flex;
@@ -178,7 +178,7 @@
 }
 
 .navLinkDropdown {
-  color: #343a40;
+  color: #eeeeee;
   background: none;
   border: none;
   font-size: 0.9rem;
