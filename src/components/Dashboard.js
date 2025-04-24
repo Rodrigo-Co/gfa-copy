@@ -236,16 +236,6 @@ const Dashboard = () => {
   const latestData = sensorData[0] || {};
   const lastUpdateTime = formatCorrectTime(latestData.timestamp);
 
-  const Sidebar = () => {
-    const [isOpen, setIsOpen] = useState(true);  // Controla se a sidebar está aberta ou fechada
-    const navigate = useNavigate();
-  
-    // Função para alternar o estado da sidebar
-    const toggleSidebar = () => {
-      setIsOpen(prevState => !prevState);  // Alterna entre true e false
-    };
-  };
-
   return (
     <div className={styles.dashboardWrapper}>
        {/* Sidebar */}
