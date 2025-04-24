@@ -98,7 +98,7 @@
 }
 
 .navbar {
-  background-color: white;
+  background-color: rgb(0, 158, 13);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 15px 20px;
   display: flex;
