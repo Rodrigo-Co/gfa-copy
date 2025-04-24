@@ -98,7 +98,7 @@
 }
 
 .navbar {
-  background-color: rgb(0, 158, 13);
+  background-color: rgb(0, 97, 8);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 15px 20px;
   display: flex;
@@ -115,7 +115,7 @@
 }
 
 .logo {
-  width: 40px;
+  width: 80px;
   height: auto;
   margin-right: 10px;
 }
@@ -123,7 +123,7 @@
 .navbarBrand h4 {
   margin: 0;
   font-size: 1.2rem;
-  color: #343a40;
+  color: #ececec;
   font-weight: bold;
 }
 
