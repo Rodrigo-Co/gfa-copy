@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { Line, Bar } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
-import "@iconscout/unicons/css/line.css";
 import {
   Chart as ChartJS,
   CategoryScale,

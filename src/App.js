@@ -5,6 +5,7 @@ import Register from './components/register';
 import Home from './pages/home';
 import Dashboard from './components/Dashboard';
 import Settings from './components/Settings';
+import "@iconscout/unicons/css/line.css";
 
 function App() {
   return (
