@@ -384,8 +384,8 @@ const Dashboard = () => {
               <div className={styles.statBox}>
                 <i className="uil uil-lightbulb-alt"></i>
                 <div>
-                  <h3>17</h3>
-                  <span>Dias</span>
+                  <h3>{peopleCount}</h3>
+                  <span>Dia</span>
                   <p>Sem alertas</p>
                 </div>
               </div>
