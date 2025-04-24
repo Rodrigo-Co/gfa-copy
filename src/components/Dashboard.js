@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { Line, Bar } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
+import { uil } from 'react-unicons';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -385,8 +386,8 @@ const Dashboard = () => {
                 <i className="uil uil-users-alt"></i>
                 <div>
                   <h3>{peopleCount}</h3>
-                  <span>Pessoas</span>
-                  <p>Na residência</p>
+                  <span>Dia</span>
+                  <p>Sem alertas</p>
                 </div>
               </div>
             </div>
