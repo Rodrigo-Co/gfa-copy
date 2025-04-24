@@ -51,7 +51,13 @@ const Dashboard = () => {
   const [userName, setUserName] = useState(localStorage.getItem('userName') || 'Visitante');
   const [fileCount, setFileCount] = useState(0);
   const [peopleCount, setPeopleCount] = useState(localStorage.getItem('peopleCount') || 1);
+  const [isOpen, setIsOpen] = useState(true); // <-- AQUI o estado da sidebar
   const navigate = useNavigate();
+
+  const toggleSidebar = () => {
+    setIsOpen((prev) => !prev);
+  };
+
 
   const [chartData, setChartData] = useState({
     mainChart: {
@@ -230,9 +236,20 @@ const Dashboard = () => {
   const latestData = sensorData[0] || {};
   const lastUpdateTime = formatCorrectTime(latestData.timestamp);
 
+  const Sidebar = () => {
+    const [isOpen, setIsOpen] = useState(true);  // Controla se a sidebar está aberta ou fechada
+    const navigate = useNavigate();
+  
+    // Função para alternar o estado da sidebar
+    const toggleSidebar = () => {
+      setIsOpen(prevState => !prevState);  // Alterna entre true e false
+    };
+  };
+
   return (
     <div className={styles.dashboardWrapper}>
-      <aside className={styles.sidebar}>
+       {/* Sidebar */}
+       <aside className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed}`}>
         <div className={styles.sidebarHeader}>
           <img
             className={styles.userImage}
@@ -267,10 +284,14 @@ const Dashboard = () => {
             <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">Mapa</a>
           </li>
         </ul>
+
+        
+       
       </aside>
 
       <section className={styles.mainContent}>
         <nav className={styles.navbar}>
+        <i className={`uil uil-bars ${styles.toggleButton}`} onClick={toggleSidebar} title={isOpen ? 'Fechar Sidebar' : 'Abrir Sidebar'}></i>
           <div className={styles.navbarBrand}>
             <img src="/Green_Fire_Alert.png" alt="Logo" className={styles.logo} />
             <h4>Green Fire Alert</h4>

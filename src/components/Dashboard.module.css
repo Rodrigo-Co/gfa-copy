@@ -18,6 +18,24 @@
   z-index: 1000;
 }
 
+.open {
+  width: 250px;
+}
+
+.closed {
+  width: 0px; /* ou 0px se quiser esconder total */
+}
+
+.toggleButton {
+  margin-top: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  font-weight: bold;
+  color: #007bff;
+}
+
 .sidebarHeader {
   padding: 20px;
   display: flex;
