@@ -28,11 +28,11 @@
 }
 
 .toggleButton {
-  width: 50px;
-  margin-top: auto;
+  margin-left: -700px;
   background: none;
   border: none;
   cursor: pointer;
+  padding: 10px;
   font-weight: bold;
   color: #ffffff;
 }
