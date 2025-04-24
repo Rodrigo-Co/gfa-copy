@@ -1,6 +1,7 @@
 .dashboardWrapper {
   display: flex;
   min-height: 100vh;
+  width: 100%;
   background-color: #f8f9fa;
   font-family: 'Open Sans', sans-serif;
 }
@@ -27,13 +28,30 @@
 }
 
 .toggleButton {
+  width: 50px;
   margin-top: auto;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 10px;
   font-weight: bold;
-  color: #007bff;
+  color: #ffffff;
+}
+
+/* Conteúdo principal */
+.mainContent {
+  flex-grow: 1;
+  transition: margin-left 0.3s ease;
+  width: 100%;
+}
+
+/* Quando sidebar está aberta */
+.sidebarOpen {
+  margin-left: 250px;
+}
+
+/* Quando sidebar está fechada */
+.sidebarClosed {
+  margin-left: 0;
 }
 
 .sidebarHeader {
