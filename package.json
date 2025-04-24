@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@iconscout/react-unicons": "^2.2.4",
+    "@iconscout/unicons": "^4.2.0",
     "@supabase/supabase-js": "^2.49.3",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
