@@ -108,7 +108,7 @@ const Register = () => {
               required
             />
             <label> 
-              Ao se inscrever, você concorda com nossos <a href="#">Termos de Uso</a> e com a <a href="#">Política de Privacidade</a>.
+              Ao se inscrever, você concorda com nossos {/*<a href="#">*/} Termos de Uso{/*</a>*/} e com a {/*<a href="#">*/}Política de Privacidade {/*</a>*/}.
             </label>
           </div>
           <button type="submit" className="button form__button">Registrar</button>
