@@ -39,28 +39,37 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="logo">GFA</div>
-      <form onSubmit={handleLogin} className="login-form">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Login</button>
-        {loginError && <span style={{ color: 'red' }}>{loginError}</span>}
-      </form>
-      <div className="register-link">
-        <a href="/register">Registre-se</a>
+    <div className="main">
+      <div className="container a-container">
+        <form onSubmit={handleLogin} className="form">
+          <h2 className="title">Bem-vindo de Volta!</h2>
+          <p className="description">Para se manter conectado, faça login com suas informações pessoais</p>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="form__input"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="form__input"
+            required
+          />
+          <button type="submit" className="button form__button">Entrar</button>
+          {loginError && <span style={{ color: 'red' }}>{loginError}</span>}
+        </form>
+      </div>
+      <div className="switch">
+        <div className="switch__container">
+          <h2 className="title">Criar Conta</h2>
+          <p className="description">ou use o email para registro</p>
+          <a href="/register" className="form__link">Registrar</a>
+        </div>
       </div>
     </div>
   );
