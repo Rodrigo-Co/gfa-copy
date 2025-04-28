@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Settings.module.css';
+import { supabase } from '../lib/supabaseClient';
+
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('profile');
-  const [name, setName] = useState('');
+  const [nome, setName] = useState('');
   const [email, setEmail] = useState('');
   const [Nos, setNos] = useState(1);
   const navigate = useNavigate();
@@ -12,27 +14,26 @@ const Settings = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const email = localStorage.getItem('userEmail');
-        if (email) {
-          const response = await fetch('http://localhost:5000/user', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email })
-          });
-          
-          if (response.ok) {
-            const userData = await response.json();
-            setName(userData.name);
-            setEmail(userData.email);
-            if (userData.Nos) {
-              setNos(userData.Nos);
+        const emailStorage = localStorage.getItem('userEmail');
+        if (emailStorage) {
+          const { data, error } = await supabase
+            .from('usuarios')
+            .select('nome, nos') // nomes certos da sua tabela
+            .eq('email', emailStorage)
+            .single();
+
+          if (error) {
+            console.error('Erro ao buscar dados do usuário:', error.message);
+          } else {
+            setName(data.nome || '');
+            setEmail(emailStorage); // já que buscamos pelo localStorage
+            if (data.nos) {
+              setNos(data.nos);
             }
           }
         }
       } catch (err) {
-        console.error('Erro ao buscar dados:', err);
+        console.error('Erro ao buscar dados do usuário:', err.message);
       }
     };
 
@@ -42,23 +43,20 @@ const Settings = () => {
   const handleSubmitProfile = async (e) => {
     e.preventDefault();
     try {
-      const email = localStorage.getItem('userEmail');
-      const response = await fetch('http://localhost:5000/update-profile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, name })
-      });
+      const emailStorage = localStorage.getItem('userEmail');
+      if (!emailStorage) throw new Error('Email não encontrado no localStorage.');
 
-      if (response.ok) {
-        localStorage.setItem('userName', name);
-        alert('Perfil atualizado com sucesso!');
-      } else {
-        throw new Error('Erro ao atualizar perfil');
-      }
+      const { error } = await supabase
+        .from('usuarios')
+        .update({ nome })
+        .eq('email', emailStorage);
+
+      if (error) throw error;
+
+      localStorage.setItem('userName', nome);
+      alert('Perfil atualizado com sucesso!');
     } catch (err) {
-      console.error('Erro ao atualizar perfil:', err);
+      console.error('Erro ao atualizar perfil:', err.message);
       alert('Erro ao atualizar perfil');
     }
   };
@@ -66,26 +64,24 @@ const Settings = () => {
   const handleSubmitSettings = async (e) => {
     e.preventDefault();
     try {
-      const email = localStorage.getItem('userEmail');
-      const response = await fetch('http://localhost:5000/update-settings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, Nos })
-      });
+      const emailStorage = localStorage.getItem('userEmail');
+      if (!emailStorage) throw new Error('Email não encontrado no localStorage.');
 
-      if (response.ok) {
-        localStorage.setItem('Nos', Nos);
-        alert('Configurações salvas com sucesso!');
-      } else {
-        throw new Error('Erro ao salvar configurações');
-      }
+      const { error } = await supabase
+        .from('usuarios')
+        .update({ nos: Nos })
+        .eq('email', emailStorage);
+
+      if (error) throw error;
+
+      localStorage.setItem('Nos', Nos);
+      alert('Configurações salvas com sucesso!');
     } catch (err) {
-      console.error('Erro ao salvar configurações:', err);
+      console.error('Erro ao salvar configurações:', err.message);
       alert('Erro ao salvar configurações');
     }
   };
+
 
   return (
     <div className={styles.container}>
@@ -122,7 +118,7 @@ const Settings = () => {
                   <input
                     type="text"
                     id="fullName"
-                    value={name}
+                    value={nome}
                     onChange={(e) => setName(e.target.value)}
                     required
                   />
@@ -148,7 +144,7 @@ const Settings = () => {
               <h2>Configurações Gerais</h2>
               <form onSubmit={handleSubmitSettings} className={styles.form}>
                 <div className={styles.formGroup}>
-                  <label htmlFor="Nos">Quantas pessoas há em sua casa:</label>
+                  <label htmlFor="Nos">Quantos Nós há em sua casa:</label>
                   <input
                     type="number"
                     id="Nos"
