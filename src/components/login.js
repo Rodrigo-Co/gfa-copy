@@ -1,78 +1,90 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/login.css';
+import styles from './login.module.css';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = 'https://zgeyiibklawawnycftcj.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpnZXlpaWJrbGF3YXdueWNmdGNqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MTczNTk3OCwiZXhwIjoyMDU3MzExOTc4fQ.7E3_tHVeIxPE3tQWcU26K1jx7cYsyUzWwvfHNpeMGi4'; // <<< sua chave pública do Supabase
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const Login = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [senha, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    
-    try {
-      const response = await fetch('http://localhost:5000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, senha: password })
-      });
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoginError('');
 
-      if (response.ok) {
-        const userData = await response.json();
-        localStorage.setItem('userName', userData.name);
-        localStorage.setItem('userEmail', email);
-        if (userData.peopleCount) {
-          localStorage.setItem('peopleCount', userData.peopleCount);
-        }
-        navigate('/dashboard');
-      } else {
-        const errorMessage = await response.text();
-        setLoginError(errorMessage);
-      }
-    } catch (error) {
-      console.error('Erro ao fazer login:', error);
-      setLoginError('Erro ao conectar com o servidor');
+  try {
+    
+    const { data, error } = await supabase
+      .from('usuarios') 
+      .select('*')
+      .eq('email', email)
+      .eq('senha', senha) 
+      .single();
+
+    if (error || !data) {
+      setLoginError('Usuário não encontrado. Por favor, registre-se.');
+      return;
     }
-  };
+
+    // Se encontrou o usuário
+    localStorage.setItem('userName', data.nome);
+    localStorage.setItem('userEmail', data.email);
+
+    if (data.Nos) {
+      localStorage.setItem('Nos', data.Nos);
+    }
+
+    navigate('/dashboard');
+    
+  } catch (error) {
+    console.error('Erro ao fazer login:', error);
+    setLoginError('Erro ao conectar com o servidor.');
+  }
+};
+
 
   return (
-    <div className="main">
-      <div className="container a-container">
-        <form onSubmit={handleLogin} className="form">
-          <h2 className="title">Bem-vindo de Volta!</h2>
-          <p className="description">Para se manter conectado, faça login com suas informações pessoais</p>
+    <div className={styles.main}>
+      <div className={styles.container}>
+        <form onSubmit={handleLogin} className={styles.form}>
+          <h2 className={styles.title}>Bem-vindo de Volta!</h2>
+          <p className={styles.description}>Para se manter conectado, faça login com suas informações pessoais</p>
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="form__input"
+            className={styles.formInput}
             required
           />
           <input
             type="password"
             placeholder="Senha"
-            value={password}
+            value={senha}
             onChange={(e) => setPassword(e.target.value)}
-            className="form__input"
+            className={styles.formInput}
             required
           />
-          <button type="submit" className="button form__button">Entrar</button>
+          <button type="submit" className={`${styles.button} ${styles.formButton}`}>Entrar</button>
           {loginError && <span style={{ color: 'red' }}>{loginError}</span>}
         </form>
       </div>
-      <div className="switch">
-        <div className="switch__container">
-          <h2 className="title">Criar Conta</h2>
-          <p className="description">ou use o email para registro</p>
-          <a href="/register" className="form__link">Registrar</a>
+      <div className={styles.switch}>
+        <div className={styles.switchContainer}>
+          <h2 className={styles.title}>Criar Conta</h2>
+          <p className={styles.description}>ou use o email para registro</p>
+          <a href="/register" className={styles.formLink}>Registrar</a>
         </div>
       </div>
     </div>
   );
+  
 };
 
 export default Login;

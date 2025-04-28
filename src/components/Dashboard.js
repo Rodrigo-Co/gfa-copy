@@ -49,8 +49,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState(localStorage.getItem('userName') || 'Visitante');
-  const [fileCount, setFileCount] = useState(0);
-  const [peopleCount, setPeopleCount] = useState(localStorage.getItem('peopleCount') || 1);
+  const [Nos, setNos] = useState(localStorage.getItem('Nos') || 1);
   const [isOpen, setIsOpen] = useState(true); // <-- AQUI o estado da sidebar
   const navigate = useNavigate();
 
@@ -189,42 +188,33 @@ const Dashboard = () => {
     try {
       const email = localStorage.getItem('userEmail');
       if (email) {
-        const response = await fetch('http://localhost:5000/user', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email })
-        });
+        const { data, error } = await supabase
+          .from('usuarios') // Tabela de usuários no Supabase
+          .select('nome, nos') // Seleciona os campos que você precisa
+          .eq('email', email) // Filtra pelo email
+          .single(); // Garante que retorna apenas um único usuário
         
-        if (response.ok) {
-          const userData = await response.json();
-          setUserName(userData.name);
-          localStorage.setItem('userName', userData.name);
-          if (userData.peopleCount) {
-            setPeopleCount(userData.peopleCount);
-            localStorage.setItem('peopleCount', userData.peopleCount);
+          if (error) {
+            console.error('Erro ao buscar dados do usuário:', error.message);
+          } else {
+            // Se encontrou o usuário, armazena os dados localmente
+            setUserName(data.nome);
+            localStorage.setItem('userName', data.nome);
+            if (data.nos) {
+              setNos(data.nos);
+              localStorage.setItem('Nos', data.nos);
+            }
           }
         }
+      } catch (err) {
+        console.error('Erro ao buscar dados do usuário:', err);
       }
-    } catch (err) {
-      console.error('Erro ao buscar dados do usuário:', err);
-    }
-  };
+    };
 
-  const fetchFileCount = async () => {
-    try {
-      const mockFileCount = { count: 1 };
-      setFileCount(mockFileCount.count);
-    } catch (err) {
-      console.error('Erro ao buscar contagem de arquivos:', err);
-    }
-  };
 
   useEffect(() => {
     fetchSensorData();
     fetchUserData();
-    fetchFileCount();
 
     const interval = setInterval(fetchSensorData, 30000);
     return () => clearInterval(interval);
@@ -240,7 +230,6 @@ const Dashboard = () => {
     <div className={styles.dashboardWrapper}>
        
 
-      <section className={`${styles.mainContent} ${isOpen ? styles.sidebarOpen : styles.sidebarClosed}`}>
         {/* Sidebar */}
        <aside className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed}`}>
         <div className={styles.sidebarHeader}>
@@ -279,51 +268,52 @@ const Dashboard = () => {
         </ul>
 
       </aside>
-        <nav className={styles.navbar}>
-        <i className={`uil uil-bars ${styles.toggleButton}`} onClick={toggleSidebar} title={isOpen ? 'Fechar Sidebar' : 'Abrir Sidebar'}></i>
-          <div className={styles.navbarBrand}>
-            <img src="/Green_Fire_Alert.png" alt="Logo" className={styles.logo} />
-            <h4>Green Fire Alert</h4>
-          </div>
-          <div className={styles.navbarMenu}>
-            <ul className={styles.navItems}>
-              <li className={styles.navItemDropdown}>
-                <button className={styles.navLinkDropdown}>
-                  Menu <i className="uil uil-angle-down"></i>
-                </button>
-                <ul className={styles.dropdownMenu}>
-                  <li>
-                    <button onClick={() => navigate('/settings')}>
-                      <i className="uil uil-user-circle"></i> Minha Conta
-                    </button>
-                  </li>
-                  <li>
-                    <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer">
-                      <i className="uil uil-envelope"></i> Mensagens
-                    </a>
-                  </li>
-                  <li className={styles.divider}></li>
-                  <li>
-                    <button>
-                      <i className="uil uil-sign-out-alt"></i> Desconectar
-                    </button>
-                  </li>
-                </ul>
-              </li>
-              <li className={styles.navItem}>
-                <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer" className={styles.navLink}>
-                  <i className="uil uil-comment-alt"></i>
-                </a>
-              </li>
-              <li className={styles.navItem}>
-                <button className={styles.navLink}>
-                  <i className="uil uil-bell"></i>
-                  <span>0</span>
-                </button>
-              </li>
-            </ul>
-          </div>
-        </nav>
+      <section className={`${styles.mainContent} ${isOpen ? styles.sidebarOpen : styles.sidebarClosed}`}>
+      <nav className={styles.navbar}>
+  <i className={`uil uil-bars ${styles.toggleButton}`} onClick={toggleSidebar} title={isOpen ? 'Fechar Sidebar' : 'Abrir Sidebar'}></i>
+  <div className={styles.navbarBrand}>
+    <img src="/Green_Fire_Alert.png" alt="Logo" className={styles.logo} />
+    <h4>Green Fire Alert</h4>
+  </div>
+  <div className={styles.navbarMenu}>
+    <ul className={styles.navItems}>
+      <li className={styles.navItemDropdown}>
+        <button className={styles.navLinkDropdown}>
+          Menu <i className="uil uil-angle-down"></i>
+        </button>
+        <ul className={styles.dropdownMenu}>
+          <li>
+            <button onClick={() => navigate('/settings')}>
+              <i className="uil uil-user-circle"></i> Minha Conta
+            </button>
+          </li>
+          <li>
+            <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer">
+              <i className="uil uil-envelope"></i> Mensagens
+            </a>
+          </li>
+          <li className={styles.divider}></li>
+          <li>
+            <button>
+              <i className="uil uil-sign-out-alt"></i> Desconectar
+            </button>
+          </li>
+        </ul>
+      </li>
+      <li className={styles.navItem}>
+        <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer" className={styles.navLink}>
+          <i className="uil uil-comment-alt"></i>
+        </a>
+      </li>
+      <li className={styles.navItem}>
+        <button className={styles.navLink}>
+          <i className="uil uil-bell"></i>
+          <span>0</span>
+        </button>
+      </li>
+    </ul>
+  </div>
+</nav>
 
         <div className={styles.dashboardContent}>
           <div className={styles.welcomeBanner}>
@@ -386,7 +376,7 @@ const Dashboard = () => {
               <div className={styles.statBox}>
                 <i className="uil uil-server-network"></i>
                 <div>
-                  <h3>{fileCount}</h3>
+                  <h3>{Nos}</h3>
                   <span>Nós</span>
                   <p>Nós de comunicação ativos</p>
                 </div>
@@ -394,7 +384,7 @@ const Dashboard = () => {
               <div className={styles.statBox}>
                 <i className="uil uil-lightbulb-alt"></i>
                 <div>
-                  <h3>{peopleCount}</h3>
+                  <h3>1</h3>
                   <span>Dia</span>
                   <p>Sem alertas</p>
                 </div>

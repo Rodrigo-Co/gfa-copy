@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/register.css'; 
+import styles from './register.module.css'; 
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = 'https://zgeyiibklawawnycftcj.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpnZXlpaWJrbGF3YXdueWNmdGNqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MTczNTk3OCwiZXhwIjoyMDU3MzExOTc4fQ.7E3_tHVeIxPE3tQWcU26K1jx7cYsyUzWwvfHNpeMGi4'; // <<< sua chave pública do Supabase
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const Register = () => {
-  const [name, setName] = useState('');
+  const [nome, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [cpf, setCpf] = useState('');
@@ -29,49 +35,70 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    
+    setRegisterError('');
+    setEmailError('');
+  
     if (!validateEmail(email)) {
       setEmailError('Por favor, insira um email válido.');
       return;
-    } else {
-      setEmailError('');
     }
-
+  
     try {
-      const response = await fetch('http://localhost:5000/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, senha: password, cpf }),
-      });
-
-      const data = await response.json();
-      
-      if (response.ok) {
-        localStorage.setItem('userName', name);
-        localStorage.setItem('userEmail', email);
-        navigate('/dashboard');
-      } else {
-        setRegisterError(data.message || 'Erro ao registrar usuário.');
+      // Primeiro: Verifica se já existe usuário com esse email
+      const { data: existingUser, error: selectError } = await supabase
+        .from('usuarios') // <-- sua tabela no Supabase
+        .select('email')
+        .eq('email', email)
+        .single(); // Retorna apenas um, se existir
+  
+      if (existingUser) {
+        setRegisterError('Já existe um usuário cadastrado com este email.');
+        return;
       }
+  
+      if (selectError && selectError.code !== 'PGRST116') {
+        // Se der outro erro que não seja "não encontrado", mostra
+        console.error(selectError);
+        setRegisterError('Erro ao verificar o email.');
+        return;
+      }
+  
+      // Segundo: Se não existir, insere o novo usuário
+      const { error: insertError } = await supabase
+        .from('usuarios') // <-- sua tabela
+        .insert([
+          { nome, email, senha: password, cpf }
+        ]);
+  
+      if (insertError) {
+        console.error(insertError);
+        setRegisterError('Erro ao registrar usuário.');
+        return;
+      }
+  
+      // Se cadastrou com sucesso
+      alert('Cadastro realizado com sucesso!');
+      navigate('/'); // Leva para a página de login
+  
     } catch (err) {
-      setRegisterError('Erro ao conectar com o servidor');
+      console.error('Erro geral:', err);
+      setRegisterError('Erro ao conectar com o servidor.');
     }
   };
 
   return (
-    <div className="main">
-      <div className="container b-container">
-        <form onSubmit={handleRegister} className="form">
-          <h2 className="title">Criar Conta</h2>
-          <p className="description">ou use o email para registro</p>
+    <div className={styles.main}>
+      <div className={styles.container}>
+        <form onSubmit={handleRegister} className={styles.form}>
+          <h2 className={styles.title}>Criar Conta</h2>
+          <p className={styles.description}>ou use o email para registro</p>
+  
           <input
             type="text"
             placeholder="Nome"
-            value={name}
+            value={nome}
             onChange={(e) => setName(e.target.value)}
-            className="form__input"
+            className={styles.formInput}
             required
           />
           <input
@@ -79,7 +106,7 @@ const Register = () => {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="form__input"
+            className={styles.formInput}
             required
           />
           {emailError && <span style={{ color: 'red' }}>{emailError}</span>}
@@ -88,7 +115,7 @@ const Register = () => {
             placeholder="Senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="form__input"
+            className={styles.formInput}
             required
           />
           <input
@@ -96,34 +123,38 @@ const Register = () => {
             placeholder="CPF"
             value={cpf}
             onChange={(e) => setCpf(formatCPF(e.target.value))}
-            className="form__input"
+            className={styles.formInput}
             maxLength={14}
             required
           />
-          <div className="terms-container">
+          
+          <div className={styles.termsContainer}>
             <input
               type="checkbox"
               checked={termsAccepted}
               onChange={() => setTermsAccepted(!termsAccepted)}
               required
             />
-            <label> 
-              Ao se inscrever, você concorda com nossos {/*<a href="#">*/} Termos de Uso{/*</a>*/} e com a {/*<a href="#">*/}Política de Privacidade {/*</a>*/}.
+            <label>
+              Ao se inscrever, você concorda com nossos Termos de Uso e com a Política de Privacidade.
             </label>
           </div>
-          <button type="submit" className="button form__button">Registrar</button>
+  
+          <button type="submit" className={`${styles.button} ${styles.formButton}`}>Registrar</button>
           {registerError && <span style={{ color: 'red', marginTop: '10px' }}>{registerError}</span>}
         </form>
       </div>
-      <div className="switch">
-        <div className="switch__container" style={{ height: '100%' }}>
-          <h2 className="title">Bem-vindo de Volta!</h2>
-          <p className="description">Para se manter conectado, faça login com suas informações pessoais</p>
-          <a href="/" className="form__link">Entrar</a>
+  
+      <div className={styles.switch}>
+        <div className={styles.switchContainer} style={{ height: '100%' }}>
+          <h2 className={styles.title}>Bem-vindo de Volta!</h2>
+          <p className={styles.description}>Para se manter conectado, faça login com suas informações pessoais</p>
+          <a href="/" className={styles.formLink}>Entrar</a>
         </div>
       </div>
     </div>
   );
+  
 };
 
 export default Register;
