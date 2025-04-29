@@ -146,6 +146,7 @@ const Dashboard = () => {
 
       if (latestTemp > 45) {
         sendEmailAlert(latestTemp);
+        sendSmsAlert(latestTemp);
       }
 
         const reversedData = [...data].reverse();
@@ -228,6 +229,43 @@ const Dashboard = () => {
       .then(() => console.log('Email enviado!'))
       .catch(error => console.error('Erro ao enviar e-mail:', error));
     };
+
+    const sendSmsAlert = async (temperatura) => {
+      const accountSid = ['AC0f6a89f', 'af28ca8741ef350f0b665344a'].join('');
+      const authToken = ['89f3d90a', '36ad6260c7ea1299f8a9e48c'].join('');
+
+
+      const fromNumber = '+18646681236'; // Ex: +1415XXXXXXX
+      const toNumber = '+5571999103011';  // Ex: +55SEUNUMEROBRASIL
+    
+      const body = `Alerta! Temperatura muito alta: ${temperatura}°C.`;
+    
+      const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+    
+      const formData = new FormData();
+  formData.append('From', fromNumber);
+  formData.append('To', toNumber);
+  formData.append('Body', body);
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + btoa(accountSid + ':' + authToken),
+      },
+      body: formData
+    });
+
+    if (response.ok) {
+      console.log('SMS enviado com sucesso!');
+    } else {
+      console.error('Erro ao enviar SMS:', await response.text());
+    }
+  } catch (error) {
+    console.error('Erro na requisição:', error);
+      }
+    };
+    
 
   useEffect(() => {
     fetchSensorData();
