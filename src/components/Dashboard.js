@@ -14,6 +14,7 @@ import {
   Legend,
 } from 'chart.js';
 import styles from './Dashboard.module.css';
+import emailjs from '@emailjs/browser';
 
 ChartJS.register(
   CategoryScale,
@@ -141,6 +142,12 @@ const Dashboard = () => {
       setSensorData(data || []);
       
       if (data && data.length > 0) {
+        const latestTemp = data[0].temperatura;
+
+      if (latestTemp > 45) {
+        sendEmailAlert(latestTemp);
+      }
+
         const reversedData = [...data].reverse();
         
         const temps = reversedData.map(item => item.temperatura);
@@ -208,7 +215,19 @@ const Dashboard = () => {
         console.error('Erro ao buscar dados do usuário:', err);
       }
     };
-
+    
+    const sendEmailAlert = (temperatura) => {
+      const userEmail = localStorage.getItem('userEmail');
+    
+      if (!userEmail) return;
+    
+      emailjs.send('service_zkcfc1t', 'template_uwhj73q', {
+        user_email: userEmail,
+        temperatura: temperatura,
+      }, 'WFHqHr8QIonRw_wfu')
+      .then(() => console.log('Email enviado!'))
+      .catch(error => console.error('Erro ao enviar e-mail:', error));
+    };
 
   useEffect(() => {
     fetchSensorData();
