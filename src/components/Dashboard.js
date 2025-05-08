@@ -395,7 +395,11 @@ const Dashboard = () => {
               </div>
               <div className={styles.statCard}>
                 <i className="uil uil-wind"></i>
-                <h3>{latestData.qualidade_do_ar || '--'}%</h3>
+                <h3>
+                {latestData.qualidade_do_ar !== undefined
+                ? `${parseFloat(Math.max(0, Math.min(100, 100 - (latestData.qualidade_do_ar / 1000) * 100)).toFixed(1))}%`
+                : '--'}
+                </h3>
                 <p>Qualidade do ar</p>
               </div>
               <div className={styles.statCard}>
