@@ -47,7 +47,8 @@ const Dashboard = () => {
   const [sensorData, setSensorData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userName, setUserName] = useState( 'Visitante');
+  const [userEmail,setEmail] = useState([]);
+  const [userName, setUserName] = useState('Visitante');
   const [Nos, setNos] = useState(1);
   const [isOpen, setIsOpen] = useState(true); // <-- AQUI o estado da sidebar
   const navigate = useNavigate();
@@ -203,10 +204,14 @@ const Dashboard = () => {
         console.error('Erro ao obter usuário logado:', userError.message);
         return;
       }
-  
+
       const email = userData?.user?.email;
+    if (!email) {
+      console.error('Email não encontrado');
+      return;
+    }
   
-      if (email) {
+      if (userEmail) {
         const { data, error } = await supabase
           .from('usuarios') // nome da sua tabela
           .select('nome, nos')
@@ -216,6 +221,7 @@ const Dashboard = () => {
         if (error) {
           console.error('Erro ao buscar dados do usuário:', error.message);
         } else {
+          setUserEmail(email);
           if (data.nome) setUserName(data.nome);
           if (data.nos !== undefined) setNos(data.nos);
         }
@@ -228,8 +234,6 @@ const Dashboard = () => {
     const sendEmailAlert = async (temperatura) => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
-    
-        const userEmail = user?.email;
     
         if (!userEmail) {
           console.warn('Usuário não autenticado ou e-mail não encontrado.');
