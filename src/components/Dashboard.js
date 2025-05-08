@@ -47,8 +47,8 @@ const Dashboard = () => {
   const [sensorData, setSensorData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userName, setUserName] = useState(localStorage.getItem('userName') || 'Visitante');
-  const [Nos, setNos] = useState(localStorage.getItem('Nos') || 1);
+  const [userName, setUserName] = useState( 'Visitante');
+  const [Nos, setNos] = useState(1);
   const [isOpen, setIsOpen] = useState(true); // <-- AQUI o estado da sidebar
   const navigate = useNavigate();
 
@@ -197,42 +197,54 @@ const Dashboard = () => {
 
   const fetchUserData = async () => {
     try {
-      const email = localStorage.getItem('userEmail');
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+  
+      if (userError) {
+        console.error('Erro ao obter usuário logado:', userError.message);
+        return;
+      }
+  
+      const email = userData?.user?.email;
+  
       if (email) {
         const { data, error } = await supabase
-          .from('usuarios') // Tabela de usuários no Supabase
-          .select('nome, nos') // Seleciona os campos que você precisa
-          .eq('email', email) // Filtra pelo email
-          .single(); // Garante que retorna apenas um único usuário
-        
-          if (error) {
-            console.error('Erro ao buscar dados do usuário:', error.message);
-          } else {
-            // Se encontrou o usuário, armazena os dados localmente
-            setUserName(data.nome);
-            localStorage.setItem('userName', data.nome);
-            if (data.nos) {
-              setNos(data.nos);
-              localStorage.setItem('Nos', data.nos);
-            }
-          }
+          .from('usuarios') // nome da sua tabela
+          .select('nome, nos')
+          .eq('email', email)
+          .single();
+  
+        if (error) {
+          console.error('Erro ao buscar dados do usuário:', error.message);
+        } else {
+          if (data.nome) setUserName(data.nome);
+          if (data.nos !== undefined) setNos(data.nos);
         }
-      } catch (err) {
-        console.error('Erro ao buscar dados do usuário:', err);
       }
-    };
+    } catch (err) {
+      console.error('Erro ao buscar dados do usuário:', err);
+    }
+  };
     
-    const sendEmailAlert = (temperatura) => {
-      const userEmail = localStorage.getItem('userEmail');
+    const sendEmailAlert = async (temperatura) => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
     
-      if (!userEmail) return;
+        const userEmail = user?.email;
     
-      emailjs.send('service_zkcfc1t', 'template_uwhj73q', {
-        user_email: userEmail,
-        temperatura: temperatura,
-      }, 'WFHqHr8QIonRw_wfu')
-      .then(() => console.log('Email enviado!'))
-      .catch(error => console.error('Erro ao enviar e-mail:', error));
+        if (!userEmail) {
+          console.warn('Usuário não autenticado ou e-mail não encontrado.');
+          return;
+        }
+    
+        await emailjs.send('service_zkcfc1t', 'template_uwhj73q', {
+          user_email: userEmail,
+          temperatura: temperatura,
+        }, 'WFHqHr8QIonRw_wfu');
+    
+        console.log('Email enviado!');
+      } catch (error) {
+        console.error('Erro ao enviar e-mail:', error);
+      }
     };
 
     const sendSmsAlert = async (temperatura) => {
@@ -241,7 +253,7 @@ const Dashboard = () => {
 
 
       const fromNumber = '+18646681236'; // Ex: +1415XXXXXXX
-      const toNumber = '+5571999103011';  // Ex: +55SEUNUMEROBRASIL
+      const toNumber = '+5571999176961';  // Ex: +55SEUNUMEROBRASIL
     
       const body = `Alerta! Temperatura muito alta: ${temperatura}°C.`;
     
@@ -354,7 +366,7 @@ const Dashboard = () => {
           </li>
           <li className={styles.divider}></li>
           <li>
-            <button>
+          <button onClick={() => navigate('/login')}>
               <i className="uil uil-sign-out-alt"></i> Desconectar
             </button>
           </li>
