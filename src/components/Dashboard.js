@@ -395,10 +395,7 @@ const Dashboard = () => {
               </div>
               <div className={styles.statCard}>
                 <i className="uil uil-wind"></i>
-                <h3>{latestData.qualidade_do_ar
-                ? `${Math.round((latestData.qualidade_do_ar / 1000) * 100)}%`
-                : '--'}%
-                </h3>
+                <h3>{latestData.qualidade_do_ar || '--'}%</h3>
                 <p>Qualidade do ar</p>
               </div>
               <div className={styles.statCard}>
