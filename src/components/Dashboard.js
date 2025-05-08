@@ -153,7 +153,12 @@ const Dashboard = () => {
         
         const temps = reversedData.map(item => item.temperatura);
         const humids = reversedData.map(item => item.umidade);
-        const airQualities = reversedData.map(item => item.qualidade_do_ar);
+        const airQualities = reversedData.map(item => {
+          const ppm = item.qualidade_do_ar;
+          const percent = Math.max(0, Math.min(100, 100 - (ppm / 1000) * 100));
+          return parseFloat(percent.toFixed(1));
+        });
+        
         
         const labels = reversedData.map(item => {
           const date = new Date(item.timestamp);
