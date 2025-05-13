@@ -297,7 +297,17 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboardContainer}>
-      {/* Removido o bloco da navbar */}
+      {/* Navbar específica do Dashboard */}
+      <header className={styles.dashboardHeader}>
+        <div className={styles.logoArea}>
+          <img src="https://cdn-icons-png.flaticon.com/512/2714/2714708.png" alt="Logo" style={{ height: 40 }} />
+          <span className={styles.dashboardTitle}>Green Fire Alert</span>
+        </div>
+        <div className={styles.headerActions}>
+          <button className={styles.menuButton}><i className="uil uil-bars"></i> Menu</button>
+          <button className={styles.notificationButton}><i className="uil uil-bell"></i><span className={styles.notificationDot}></span></button>
+        </div>
+      </header>
       <div className={styles.mainContent}>
         {/* Conteúdo do dashboard */}
         <div className={styles.welcomeBanner}>

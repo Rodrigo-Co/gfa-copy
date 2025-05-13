@@ -157,18 +157,65 @@
   margin-left: 0; /* Garante que não há espaço para sidebar */
 }
 
-.header {
+.dashboardHeader {
   width: 100%;
   background: #027911;
   color: #fff;
-  padding: 24px 32px;
-  font-size: 2rem;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logoArea {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboardTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.menuButton, .notificationButton {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.notificationDot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  background: #ff3b3b;
+  border-radius: 50%;
+  display: inline-block;
+}
+/* Removido o bloco solto abaixo:
+font-size: 2rem;
   font-weight: bold;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+*/
 
 /* O restante do CSS permanece igual, sem sidebar */
 @media (max-width: 992px) {
