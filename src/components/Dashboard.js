@@ -295,15 +295,7 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboardContainer}>
-      <nav className={styles.navbar}>
-        <img src="https://cdn-icons-png.flaticon.com/512/2714/2714708.png" alt="Logo" style={{ height: 40 }} />
-        <ul style={{ display: 'flex', listStyle: 'none', gap: '32px', margin: 0, padding: 0 }}>
-          <li><a href="/dashboard" style={{ color: '#fff', textDecoration: 'none', fontWeight: 600 }}>Início</a></li>
-          <li><a href="/sobre" style={{ color: '#fff', textDecoration: 'none', fontWeight: 600 }}>Sobre</a></li>
-          <li><a href="/contato" style={{ color: '#fff', textDecoration: 'none', fontWeight: 600 }}>Contato</a></li>
-        </ul>
-        <button className='btn-default' onClick={() => navigate('/')}>Página do Usuário</button>
-      </nav>
+      {/* Removido o bloco da navbar */}
       <div className={styles.mainContent}>
         {/* Conteúdo do dashboard */}
         <div className={styles.welcomeBanner}>
