@@ -47,7 +47,7 @@ const Dashboard = () => {
   const [sensorData, setSensorData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userEmail,setEmail] = useState([]);
+  const [userEmail,setUserEmail] = useState([]);
   const [userName, setUserName] = useState('Visitante');
   const [Nos, setNos] = useState(1);
   const [isOpen, setIsOpen] = useState(true); // <-- AQUI o estado da sidebar
@@ -130,6 +130,62 @@ const Dashboard = () => {
     },
   };
 
+  const sendEmailAlert = useCallback(async (temperatura) => {
+    try {
+  
+      if (!userEmail) {
+        console.warn('Usuário não autenticado ou e-mail não encontrado.');
+        return;
+      }
+  
+      await emailjs.send('service_zkcfc1t', 'template_uwhj73q', {
+        user_email: userEmail,
+        temperatura: temperatura,
+      }, 'WFHqHr8QIonRw_wfu');
+  
+      console.log('Email enviado!');
+    } catch (error) {
+      console.error('Erro ao enviar e-mail:', error);
+    }
+  }, [userEmail]);
+
+  const sendSmsAlert = useCallback(async (temperatura) => {
+    const accountSid = ['AC0f6a89f', 'af28ca8741ef350f0b665344a'].join('');
+    const authToken = ['89f3d90a', '36ad6260c7ea1299f8a9e48c'].join('');
+
+
+    const fromNumber = '+18646681236'; // Ex: +1415XXXXXXX
+    const toNumber = '+5571999176961';  // Ex: +55SEUNUMEROBRASIL
+  
+    const body = `Alerta! Temperatura muito alta: ${temperatura}°C.`;
+  
+    const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+  
+    const formData = new FormData();
+formData.append('From', fromNumber);
+formData.append('To', toNumber);
+formData.append('Body', body);
+
+try {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Basic ' + btoa(accountSid + ':' + authToken),
+    },
+    body: formData
+  });
+
+  if (response.ok) {
+    console.log('SMS enviado com sucesso!');
+  } else {
+    console.error('Erro ao enviar SMS:', await response.text());
+  }
+} catch (error) {
+  console.error('Erro na requisição:', error);
+    }
+  }, []);
+
+
   const fetchSensorData = useCallback(async () => {
     try {
       const { data, error } = await supabase
@@ -194,9 +250,9 @@ const Dashboard = () => {
       setError(err.message);
       setLoading(false);
     }
-  }, []);
+  }, [sendEmailAlert, sendSmsAlert]);
 
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       const { data: userData, error: userError } = await supabase.auth.getUser();
   
@@ -229,63 +285,9 @@ const Dashboard = () => {
     } catch (err) {
       console.error('Erro ao buscar dados do usuário:', err);
     }
-  };
+  }, [userEmail]);
     
-    const sendEmailAlert = async (temperatura) => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
     
-        if (!userEmail) {
-          console.warn('Usuário não autenticado ou e-mail não encontrado.');
-          return;
-        }
-    
-        await emailjs.send('service_zkcfc1t', 'template_uwhj73q', {
-          user_email: userEmail,
-          temperatura: temperatura,
-        }, 'WFHqHr8QIonRw_wfu');
-    
-        console.log('Email enviado!');
-      } catch (error) {
-        console.error('Erro ao enviar e-mail:', error);
-      }
-    };
-
-    const sendSmsAlert = async (temperatura) => {
-      const accountSid = ['AC0f6a89f', 'af28ca8741ef350f0b665344a'].join('');
-      const authToken = ['89f3d90a', '36ad6260c7ea1299f8a9e48c'].join('');
-
-
-      const fromNumber = '+18646681236'; // Ex: +1415XXXXXXX
-      const toNumber = '+5571999176961';  // Ex: +55SEUNUMEROBRASIL
-    
-      const body = `Alerta! Temperatura muito alta: ${temperatura}°C.`;
-    
-      const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
-    
-      const formData = new FormData();
-  formData.append('From', fromNumber);
-  formData.append('To', toNumber);
-  formData.append('Body', body);
-
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Basic ' + btoa(accountSid + ':' + authToken),
-      },
-      body: formData
-    });
-
-    if (response.ok) {
-      console.log('SMS enviado com sucesso!');
-    } else {
-      console.error('Erro ao enviar SMS:', await response.text());
-    }
-  } catch (error) {
-    console.error('Erro na requisição:', error);
-      }
-    };
     
 
   useEffect(() => {
@@ -294,7 +296,7 @@ const Dashboard = () => {
 
     const interval = setInterval(fetchSensorData, 30000);
     return () => clearInterval(interval);
-  }, [fetchSensorData]);
+  }, [fetchSensorData, fetchUserData]);
 
   if (loading) return <div className={styles.loading}>Carregando...</div>;
   if (error) return <div className={styles.error}>Erro: {error}</div>;
