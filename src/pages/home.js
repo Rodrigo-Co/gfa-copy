@@ -43,7 +43,7 @@ const Home = () => {
             <a href='#home' onClick={scrollToTop}>Início</a>
           </li>
           <li className={`nav-item ${activeSection === 'projeto' ? 'active' : ''}`}>
-            <a href='#projeto'>teste</a>
+            <a href='#projeto'>sobre</a>
           </li>
           <li className={`nav-item ${activeSection === 'contato' ? 'active' : ''}`}>
             <a href='#contato'>Contato</a>
