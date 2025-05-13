@@ -38,8 +38,6 @@ const Home = () => {
   return (
     <div className="home-container">
       <nav id='navbar'>
-        <img src="https://cdn-icons-png.flaticon.com/512/2714/2714708.png" alt="Project Logo" id="nav_logo" /> 
-
         <ul id='nav_list'>
           <li className={`nav-item ${activeSection === 'home' ? 'active' : ''}`}>
             <a href='#home' onClick={scrollToTop}>Início</a>
