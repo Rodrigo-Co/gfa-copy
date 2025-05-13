@@ -164,15 +164,36 @@
   .sidebar {
     width: 100%;
     display: flex;
+    flex-direction: row;
     padding: 0;
+    justify-content: space-around;
   }
   
   .tabButton {
     justify-content: center;
     padding: 15px 10px;
+    flex: 1;
   }
   
   .content {
     padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 10px;
+  }
+  .tabButton {
+    font-size: 0.95rem;
+    padding: 10px 2px;
+  }
+  .formGroup input {
+    font-size: 0.95rem;
+    padding: 8px 8px;
+  }
+  .submitButton, .cancelButton {
+    font-size: 0.95rem;
+    padding: 8px 10px;
   }
 }
