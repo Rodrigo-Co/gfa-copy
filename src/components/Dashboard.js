@@ -300,7 +300,7 @@ const Dashboard = () => {
       {/* Navbar específica do Dashboard */}
       <header className={styles.dashboardHeader}>
         <div className={styles.logoArea}>
-          <img src="https://cdn-icons-png.flaticon.com/512/2714/2714708.png" alt="Logo" style={{ height: 40 }} />
+          <img src="../Green_Fire_Alert.png" alt="Logo" style={{ height: 40 }} />
           <span className={styles.dashboardTitle}>Green Fire Alert</span>
         </div>
         <div className={styles.headerActions}>
