@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { Line, Bar } from 'react-chartjs-2';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -50,8 +50,12 @@ const Dashboard = () => {
   const [userEmail,setEmail] = useState([]);
   const [userName, setUserName] = useState('Visitante');
   const [Nos, setNos] = useState(1);
+<<<<<<< HEAD
   const [isOpen, setIsOpen] = useState(true); // <-- AQUI o estado da sidebar
   const navigate = useNavigate();
+=======
+  // const navigate = useNavigate();
+>>>>>>> 7faf04877f3ff3a21436b8b98fa1f56270dfb732
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
@@ -303,6 +307,7 @@ const Dashboard = () => {
   const lastUpdateTime = formatCorrectTime(latestData.timestamp);
 
   return (
+<<<<<<< HEAD
     <div className={styles.dashboardWrapper}>
        
 
@@ -318,6 +323,25 @@ const Dashboard = () => {
             <h5 className={styles.userName}>{userName}</h5>
             <p>Leitor do consumo</p>
           </div>
+=======
+    <div className={styles.dashboardContainer}>
+      {/* Navbar específica do Dashboard */}
+      <header className={styles.dashboardHeader}>
+        <div className={styles.logoArea}>
+          <img src="../Green_Fire_Alert.png" alt="Logo" style={{ height: 40 }} />
+          <span className={styles.dashboardTitle}>Green Fire Alert</span>
+        </div>
+        <div className={styles.headerActions}>
+          <button className={styles.menuButton}><i className="uil uil-bars"></i> Menu</button>
+          <button className={styles.notificationButton}><i className="uil uil-bell"></i><span className={styles.notificationDot}></span></button>
+        </div>
+      </header>
+      <div className={styles.mainContent}>
+        {/* Conteúdo do dashboard */}
+        <div className={styles.welcomeBanner}>
+          <h1>Bem vindo ao Dashboard</h1>
+          <p>Olá, {userName}, bem vindo ao seu dashboard!</p>
+>>>>>>> 7faf04877f3ff3a21436b8b98fa1f56270dfb732
         </div>
 
         <ul className={styles.sidebarMenu}>
