@@ -47,11 +47,16 @@ const Dashboard = () => {
   const [sensorData, setSensorData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+<<<<<<< Updated upstream
   const [userEmail,setUserEmail] = useState([]);
+=======
+  const [userEmail, setUserEmail] = useState('');
+>>>>>>> Stashed changes
   const [userName, setUserName] = useState('Visitante');
   const [Nos, setNos] = useState(1);
   const [isOpen, setIsOpen] = useState(true); // <-- AQUI o estado da sidebar
   const navigate = useNavigate();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
@@ -348,21 +353,26 @@ try {
       </aside>
       <section className={`${styles.mainContent} ${isOpen ? styles.sidebarOpen : styles.sidebarClosed}`}>
         <nav className={styles.navbar}>
-          <i
-            className={`uil uil-bars ${styles.toggleButton}`}
-            onClick={toggleSidebar}
-            title={isOpen ? 'Fechar Sidebar' : 'Abrir Sidebar'}
-          ></i>
           <div className={styles.navbarBrand}>
             <img src="/Green_Fire_Alert.png" alt="Logo" className={styles.logo} />
-            <h4>Green Fire Alert</h4>
+            <span>Green Fire Alert</span>
           </div>
           <div className={styles.navbarMenu}>
-            <ul className={styles.navItems}>
-              <li className={styles.navItemDropdown}>
-                <button className={styles.navLinkDropdown}>
-                  Menu <i className="uil uil-angle-down"></i>
-                </button>
+            <button
+              className={styles.toggleButton}
+              onClick={toggleSidebar}
+              title="Abrir/Fechar menu"
+            >
+              <i className="uil uil-bars"></i>
+            </button>
+            <div className={styles.dropdownWrapper}>
+              <button
+                className={styles.navLinkDropdown}
+                onClick={() => setDropdownOpen((open) => !open)}
+              >
+                Menu <i className="uil uil-angle-down"></i>
+              </button>
+              {dropdownOpen && (
                 <ul className={styles.dropdownMenu}>
                   <li>
                     <button onClick={() => navigate('/settings')}>
@@ -381,23 +391,16 @@ try {
                     </button>
                   </li>
                 </ul>
-              </li>
-              <li className={styles.navItem}>
-                <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer" className={styles.navLink}>
-                  <i className="uil uil-comment-alt"></i>
-                </a>
-              </li>
-              <li className={styles.navItem}>
-                <button
-                  className={styles.navLink}
-                  onClick={() => alert('Abrir painel de notificações!')}
-                  aria-label="Notificações"
-                >
-                  <i className="uil uil-bell"></i>
-                  <span>0</span>
-                </button>
-              </li>
-            </ul>
+              )}
+            </div>
+            <button
+              className={styles.toggleButton}
+              onClick={() => alert('Abrir painel de notificações!')}
+              title="Notificações"
+            >
+              <i className="uil uil-bell"></i>
+              <span>0</span>
+            </button>
           </div>
         </nav>
 
