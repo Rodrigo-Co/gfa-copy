@@ -47,11 +47,7 @@ const Dashboard = () => {
   const [sensorData, setSensorData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-<<<<<<< Updated upstream
-  const [userEmail,setUserEmail] = useState([]);
-=======
   const [userEmail, setUserEmail] = useState('');
->>>>>>> Stashed changes
   const [userName, setUserName] = useState('Visitante');
   const [Nos, setNos] = useState(1);
   const [isOpen, setIsOpen] = useState(true); // <-- AQUI o estado da sidebar
