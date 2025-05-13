@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { Line, Bar } from 'react-chartjs-2';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -48,7 +48,7 @@ const Dashboard = () => {
   const [userEmail,setUserEmail] = useState([]);
   const [userName, setUserName] = useState('Visitante');
   const [Nos, setNos] = useState(1);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [chartData, setChartData] = useState({
     mainChart: {
