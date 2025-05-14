@@ -9,23 +9,33 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    
     const handleScroll = () => {
       const sections = ['home', 'projeto', 'equipe', 'contato'];
+      let closestSection = 'home';
+      let minOffset = Infinity;
+  
       for (const section of sections) {
         const element = document.getElementById(section);
-        if (element && element.getBoundingClientRect().top <= 100) {
-          setActiveSection(section);
+        if (element) {
+          const offset = Math.abs(element.getBoundingClientRect().top);
+          if (offset < minOffset) {
+            minOffset = offset;
+            closestSection = section;
+          }
         }
       }
+  
+      setActiveSection(closestSection);
     };
-
+  
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToTop = () => {
+  /*const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  };*/
 
   const handleUserPageClick = () => {
     navigate('/'); 
@@ -40,13 +50,38 @@ const Home = () => {
       <nav id='navbar'>
         <ul id='nav_list'>
           <li className={`nav-item ${activeSection === 'home' ? 'active' : ''}`}>
-            <a href='#home' onClick={scrollToTop}>Início</a>
+
+          <button
+          className="nav-link"
+          onClick={() => {
+          document.getElementById('home')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          >
+            Início
+          </button>
+
           </li>
           <li className={`nav-item ${activeSection === 'projeto' ? 'active' : ''}`}>
-            <a href='#projeto'>sobre</a>
+          <button
+          className="nav-link"
+          onClick={() => {
+          document.getElementById('projeto')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          >
+            Sobre
+          </button>
           </li>
           <li className={`nav-item ${activeSection === 'contato' ? 'active' : ''}`}>
-            <a href='#contato'>Contato</a>
+
+          <button
+          className="nav-link"
+          onClick={() => {
+          document.getElementById('contato')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          >
+            Contato
+          </button>
+
           </li>
         </ul>
 

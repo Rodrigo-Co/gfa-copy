@@ -38,6 +38,22 @@
   align-items: center;
 }
 
+.nav-link {
+  background: none;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 1.08rem;
+  padding: 6px 12px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-link:hover, .nav-link.active{
+  background: #fff;
+  color: #027911;
+}
+
 .nav-item a {
   color: #fff;
   text-decoration: none;
