@@ -254,21 +254,51 @@ try {
   }, [sendEmailAlert, sendSmsAlert]);
 
   const fetchUserData = useCallback(async () => {
-    try {
-      const { data: userData, error: userError } = await supabase.auth.getUser();
+
+    const storedUser = sessionStorage.getItem('user');
+    if (!storedUser) {
+      console.warn('Usuário não encontrado na sessão');
+      setUserName('Visitante');
+      setUserEmail('');
+      return;
+    }
+
+    const { email } = JSON.parse(storedUser);
+
+  try {
+    const { data, error } = await supabase
+      .from('usuarios')
+      .select('nome, nos')
+      .eq('email', email)
+      .single();
+
+    if (error) {
+      console.error('Erro ao buscar dados do usuário:', error.message);
+      setUserName('Visitante');
+      setUserEmail('');
+    } else {
+      setUserEmail(email);
+      if (data?.nome) setUserName(data.nome);
+      if (data?.nos !== undefined) setNos(data.nos);
+    }
+  } catch (err) {
+    console.error('Erro ao buscar dados do usuário:', err);
+  }
+
+    /*try {
+      const { data: sessionData, error: sessionError } = await supabase.auth.getUser();
   
-      if (userError) {
-        console.error('Erro ao obter usuário logado:', userError.message);
-        return;
+      if (sessionError || !sessionData?.session) {
+        console.warn('Usuário não autenticado ou sessão ausente.');
+      return;
       }
 
-      const email = userData?.user?.email;
+      const email = sessionData.session.user.email;
     if (!email) {
       console.error('Email não encontrado');
       return;
     }
   
-      if (userEmail) {
         const { data, error } = await supabase
           .from('usuarios') // nome da sua tabela
           .select('nome, nos')
@@ -282,11 +312,11 @@ try {
           if (data.nome) setUserName(data.nome);
           if (data.nos !== undefined) setNos(data.nos);
         }
-      }
+      
     } catch (err) {
       console.error('Erro ao buscar dados do usuário:', err);
-    }
-  }, [userEmail]);
+    }*/
+  }, []);
     
     
     
