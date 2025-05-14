@@ -435,7 +435,7 @@ try {
          </nav>
          <div className={styles.dashboardContent}>
            <div className={styles.welcomeBanner}>
-             <h1>Bem vindo ao Dashboard</h1>
+             <h1>Bem vindo de volta</h1>
              <p>Olá, {userName}, bem vindo ao seu dashboard!</p>
            </div>
            <section className={styles.statsSection}>
