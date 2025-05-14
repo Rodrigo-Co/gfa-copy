@@ -23,17 +23,14 @@ const handleLogin = async (e) => {
       .single();
 
     if (error || !data) {
-      setLoginError('Usuário não encontrado. Por favor, registre-se.');
+      setLoginError('Email ou senha incorretos.');
       return;
     }
 
-    // Se encontrou o usuário
-    localStorage.setItem('userName', data.nome);
-    localStorage.setItem('userEmail', data.email);
-
-    if (data.Nos) {
-      localStorage.setItem('Nos', data.Nos);
-    }
+    // ✅ Sessão temporária (some ao fechar o navegador)
+    sessionStorage.setItem('user', JSON.stringify({
+      email: data.email
+    }));
 
     navigate('/dashboard');
     

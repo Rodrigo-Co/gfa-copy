@@ -9,31 +9,32 @@ const Settings = () => {
   const [nome, setName] = useState('');
   const [email, setEmail] = useState('');
   const [Nos, setNos] = useState(1);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const emailStorage = localStorage.getItem('userEmail');
-        if (emailStorage) {
+        const userSession = sessionStorage.getItem('user');
+        if (userSession) {
+          const userData = JSON.parse(userSession);
           const { data, error } = await supabase
             .from('usuarios')
-            .select('nome, nos') // nomes certos da sua tabela
-            .eq('email', emailStorage)
+            .select('nome, email, nos') // nomes certos da sua tabela
+            .eq('email', userData.email)
             .single();
 
           if (error) {
             console.error('Erro ao buscar dados do usuário:', error.message);
           } else {
             setName(data.nome || '');
-            setEmail(emailStorage); // já que buscamos pelo localStorage
-            if (data.nos) {
-              setNos(data.nos);
-            }
+            setEmail(data.email || ''); // já que buscamos pelo localStorage
+            setNos(data.nos || 1);
           }
         }
       } catch (err) {
         console.error('Erro ao buscar dados do usuário:', err.message);
+        setError('Erro ao buscar dados do usuário');
       }
     };
 
@@ -43,17 +44,18 @@ const Settings = () => {
   const handleSubmitProfile = async (e) => {
     e.preventDefault();
     try {
-      const emailStorage = localStorage.getItem('userEmail');
-      if (!emailStorage) throw new Error('Email não encontrado no localStorage.');
+      const userSession = sessionStorage.getItem('user');
+      if (!userSession) throw new Error('Sessão do usuário não encontrada.');
 
+      const userData = JSON.parse(userSession);
       const { error } = await supabase
         .from('usuarios')
         .update({ nome })
-        .eq('email', emailStorage);
+        .eq('email', userData.email); // Atualizar nome no banco de dados
 
       if (error) throw error;
 
-      localStorage.setItem('userName', nome);
+      sessionStorage.setItem('userName', nome); // Atualizar o nome na sessão
       alert('Perfil atualizado com sucesso!');
     } catch (err) {
       console.error('Erro ao atualizar perfil:', err.message);
@@ -64,17 +66,25 @@ const Settings = () => {
   const handleSubmitSettings = async (e) => {
     e.preventDefault();
     try {
-      const emailStorage = localStorage.getItem('userEmail');
-      if (!emailStorage) throw new Error('Email não encontrado no localStorage.');
+      const userSession = sessionStorage.getItem('user');
+      if (!userSession) throw new Error('Sessão do usuário não encontrada.');
+
+      const userData = JSON.parse(userSession);
+
+      // Verificar se a quantidade de "Nos" é válida
+      if (isNaN(Nos) || Nos <= 0) {
+        alert('Por favor, insira uma quantidade válida de "Nos".');
+        return;
+      }
 
       const { error } = await supabase
         .from('usuarios')
         .update({ nos: Nos })
-        .eq('email', emailStorage);
+        .eq('email', userData.email); // Atualizar no banco de dados
 
       if (error) throw error;
 
-      localStorage.setItem('Nos', Nos);
+      sessionStorage.setItem('Nos', Nos); // Salvar a quantidade de "Nos" na sessão
       alert('Configurações salvas com sucesso!');
     } catch (err) {
       console.error('Erro ao salvar configurações:', err.message);
@@ -91,6 +101,7 @@ const Settings = () => {
       >
         <i className="uil uil-arrow-left"></i> Voltar
       </button>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <div className={styles.settingsContainer}>
         <div className={styles.sidebar}>
