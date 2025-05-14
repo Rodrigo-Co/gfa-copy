@@ -153,6 +153,7 @@ body {
 .dashboardContent {
   margin-top: 250px; /* ou ajuste conforme a altura da navbar (estava 80)*/
   width: 100%;
+  padding-top: 30vh;
 }
 
 .welcomeBanner {
@@ -428,6 +429,7 @@ body {
   top: 0;
   z-index: 100;
 }
+
 
 .logoArea {
   display: flex;
