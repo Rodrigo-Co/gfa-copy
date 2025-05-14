@@ -10,6 +10,7 @@ const Settings = () => {
   const [email, setEmail] = useState('');
   const [Nos, setNos] = useState(1);
   const [error, setError] = useState('');
+  const [novaSenha, setNovaSenha] = useState(""); // <-- Add this line
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -95,16 +96,17 @@ const Settings = () => {
 
   return (
     <div className={styles.container}>
-      <button 
+      {/* <button 
         className={styles.backButton}
         onClick={() => navigate('/dashboard')}
       >
         <i className="uil uil-arrow-left"></i> Voltar
-      </button>
+      </button> */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <div className={styles.settingsContainer}>
         <div className={styles.sidebar}>
+    
           <button
             className={`${styles.tabButton} ${activeTab === 'profile' ? styles.active : ''}`}
             onClick={() => setActiveTab('profile')}
@@ -117,6 +119,10 @@ const Settings = () => {
           >
             <i className="uil uil-cog"></i> Configurações
           </button>
+          <button className={styles.backButton} onClick={() => navigate(-1)}>
+          <i className="uil uil-arrow-left"></i> Voltar
+          </button>
+
         </div>
 
         <div className={styles.content}>
@@ -141,6 +147,16 @@ const Settings = () => {
                     id="email"
                     value={email}
                     disabled
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="password">Nova Senha</label>
+                  <input
+                    type="password"
+                    id="password"
+                    placeholder="Digite sua nova senha"
+                    value={novaSenha || ""}
+                    onChange={(e) => setNovaSenha(e.target.value)}
                   />
                 </div>
                 <button type="submit" className={styles.submitButton}>
