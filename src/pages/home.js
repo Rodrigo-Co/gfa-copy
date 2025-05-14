@@ -4,15 +4,15 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '../styles/home.css';
 import backgroundImage from '../assets/agro.jpg'; 
 
-const Home = () => {
-  const [activeSection, setActiveSection] = useState('home');
+const Inicio = () => {
+  const [activeSection, setActiveSection] = useState('inicio');
   const navigate = useNavigate();
 
   useEffect(() => {
     
     const handleScroll = () => {
-      const sections = ['home', 'projeto', 'equipe', 'contato'];
-      let closestSection = 'home';
+      const sections = ['inicio', 'projeto', 'equipe', 'contato'];
+      let closestSection = 'inicio';
       let minOffset = Infinity;
   
       for (const section of sections) {
@@ -46,15 +46,15 @@ const Home = () => {
   };
 
   return (
-    <div className="home-container">
+    <div className="inicio-container">
       <nav id='navbar'>
         <ul id='nav_list'>
-          <li className={`nav-item ${activeSection === 'home' ? 'active' : ''}`}>
+          <li className={`nav-item ${activeSection === 'inicio' ? 'active' : ''}`}>
 
           <button
           className="nav-link"
           onClick={() => {
-          document.getElementById('home')?.scrollIntoView({ behavior: 'smooth' });
+          document.getElementById('inicio')?.scrollIntoView({ behavior: 'smooth' });
           }}
           >
             Início
@@ -90,7 +90,11 @@ const Home = () => {
         </button>
       </nav>
 
-      <section id="home" style={{ backgroundImage: `url(${backgroundImage})` }}>
+      <section id="desbug" >
+        <p style={{ color: 'black'}}>Testando conteúdo visível</p>
+      </section>
+
+      <section id="inicio"  style={{backgroundImage: `url(${backgroundImage})`}}>
         <div className="hero-content">
           <div className="hero-text">
             <h1>GFA - Green Fire Alert</h1>
@@ -196,4 +200,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Inicio;
