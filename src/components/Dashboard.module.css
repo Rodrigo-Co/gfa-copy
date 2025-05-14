@@ -1,69 +1,70 @@
-.dashboardWrapper {
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
-  background-color: #f8f9fa;
-  font-family: 'Open Sans', sans-serif;
-}
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #f8f9fa;
+}
+
+.dashboardWrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* SIDEBAR */
 .sidebar {
   width: 250px;
   background-color: #343a40;
   color: white;
-  position: fixed; 
+  padding: 20px;
+  position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
   overflow-y: auto;
-  transition: width 0.3s, left 0.3s;
+  transition: left 0.3s, width 0.3s;
   z-index: 1000;
   display: flex;
   flex-direction: column;
 }
 
 .sidebar.closed {
+  left: -180px;
   width: 0;
-  left: -250px;
+  padding: 0;
   overflow: hidden;
 }
 
 .mainContent {
-  flex-grow: 1;
+  margin-left: 250px;
+  width: calc(100% - 250px);
   min-height: 100vh;
-  transition: margin-left 0.3s, width 0.3s;
-  background-color: #f8f9fa;
   padding-top: 70px;
-  padding-left: 0;
-  width: 100vw;
+  padding: 32px 24px;
   display: flex;
   flex-direction: column;
   gap: 32px;
+  background-color: #f8f9fa;
+  transition: margin-left 0.3s, width 0.3s;
 }
 
-.sidebar.open ~ .mainContent {
-  margin-left: 250px;
-  width: calc(100vw - 250px);
+@media (max-width: 1200px) {
+  .mainContent {
+    padding: 16px 8px;
+  }
 }
 
-.sidebar.closed ~ .mainContent {
-  margin-left: 0;
-  width: 100vw;
-}
-
-/* Responsividade */
 @media (max-width: 992px) {
   .sidebar {
-    width: 200px;
+    width: 180px;
   }
-  .sidebar.open ~ .mainContent {
-    margin-left: 200px;
-    width: calc(100vw - 200px);
+  .mainContent {
+    margin-left: 180px;
+    width: calc(100vw - 180px);
   }
 }
 
@@ -73,7 +74,7 @@
     width: 180px;
     left: -180px;
     z-index: 1001;
-    transition: left 0.3s;
+    transition: left 0.3s, width 0.3s;
   }
   .sidebar.open {
     left: 0;
@@ -83,47 +84,119 @@
     left: -180px;
     width: 0;
   }
-  .mainContent,
-  .sidebar.closed ~ .mainContent,
-  .sidebar.open ~ .mainContent {
-    margin-left: 0;
-    width: 100vw;
+  .mainContent {
+    margin-left: 0 !important;
+    width: 100vw !important;
     padding: 8px 2px;
     gap: 16px;
   }
-}
-
-/* Garante que o conteúdo preencha toda a tela em qualquer situação */
-@media (max-width: 480px) {
-  .mainContent {
-    padding: 4px 1px;
-    gap: 8px;
+  .navbar {
+    left: 0 !important;
+    width: 100vw !important;
   }
 }
 
-.toggleButton {
-  position: relative;
-  margin-right: -400px; 
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 10px;
-  font-weight: bold;
-  color: #ffffff;
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 250px;
+  width: calc(100% - 250px);
+  background-color: #027911;
+  color: #fff;
+  padding: 0 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  transition: left 0.3s, width 0.3s;
 }
 
-
-/* Conteúdo principal */
-.mainContent {
-  flex-grow: 1;
-  transition: margin-left 0.3s ease;
-  background-color: #f8f9fa;
-  min-height: 100vh;
+.statsRow,
+.chartRow,
+.infoRow {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
-.mainContent {
-  width: 100vw;
-  min-height: 100vh;
+.chartRow {
+  gap: 24px;
+  margin-bottom: 0;
+}
+
+.chartContainer {
+  flex: 1;
+  min-width: 320px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  padding: 24px;
+  margin: 0 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chartWrapper {
+  width: 100%;
+  min-height: 260px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboardContent {
+  margin-top: 80px;
+  width: 100%;
+}
+
+.welcomeBanner {
+  margin-bottom: 24px;
+  background: #e9f7ef;
+  border-radius: 10px;
+  padding: 18px 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  text-align: left;
+}
+
+.statsSection,
+.chartsSection,
+.bottomStatsSection {
+  margin-bottom: 24px;
+}
+
+.statCard,
+.statBox {
+  flex: 1;
+  min-width: 180px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  padding: 24px;
+  margin: 0 8px;
+}
+
+@media (max-width: 600px) {
+  .statCard,
+  .statBox,
+  .chartContainer {
+    padding: 12px;
+    font-size: 0.95rem;
+    min-width: 120px;
+  }
+  .welcomeBanner {
+    padding: 10px 8px;
+    font-size: 0.95rem;
+  }
+  .chartWrapper {
+    min-height: 180px;
+    height: 200px;
+  }
 }
 
 .sidebarHeader {
@@ -154,15 +227,14 @@
 }
 
 .userInfo p {
-  margin: 0;
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.7);
 }
 
 .sidebarMenu {
   list-style: none;
-  padding: 0;
   margin: 20px 0;
+  padding: 0;
 }
 
 .menuItem {
@@ -184,7 +256,8 @@
   text-align: center;
 }
 
-.menuItem a, .menuItem button {
+.menuItem a,
+.menuItem button {
   color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   background: none;
@@ -195,26 +268,34 @@
   font-family: inherit;
 }
 
-.menuItem a:hover, .menuItem button:hover {
+.menuItem a:hover,
+.menuItem button:hover {
   color: white;
 }
 
-
+/* NAVBAR */
 .navbar {
-  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 250px;
+  width: calc(100% - 250px);
   background-color: #027911;
   color: #fff;
   padding: 0 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 0;
-  left: 0;
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 60px;
+  transition: left 0.3s ease, width 0.3s ease;
 }
+
+.sidebar.closed ~ .navbar {
+  left: 70px;
+  width: calc(100% - 70px);
+}
+
 
 .navbarBrand {
   display: flex;
@@ -257,7 +338,7 @@
   background: #fff;
   color: #333;
   border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   min-width: 160px;
   z-index: 2000;
   padding: 8px 0;
@@ -267,7 +348,6 @@
 
 .dropdownMenu li {
   list-style: none;
-  padding: 0;
 }
 
 .dropdownMenu button,
@@ -298,27 +378,43 @@
   width: 90%;
   align-self: center;
 }
+
+/* BOTÃO TOGGLE */
 .toggleButton {
   font-size: 1.5rem;
-  cursor: pointer;
   margin-right: 12px;
   background: none;
   border: none;
   color: #fff;
+  cursor: pointer;
 }
 
+/* MAIN CONTENT */
 .mainContent {
-  padding-top: 70px; /* Espaço para a navbar fixa */
-  background-color: #f8f9fa;
-  flex: 1;
-  width: 100%;
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  min-height: 100vh;
+  padding-top: 70px;
   padding: 32px 24px;
   display: flex;
   flex-direction: column;
   gap: 32px;
-  margin-left: 0; /* Garante que não há espaço para sidebar */
+  background-color: #f8f9fa;
+  transition: margin-left 0.3s ease, width 0.3s ease;
 }
 
+.sidebar.closed ~ .mainContent {
+  margin-left: 70px;
+  width: calc(100% - 70px);
+}
+
+
+.sidebar.closed ~ .mainContent {
+  margin-left: 0;
+  width: 100vw;
+}
+
+/* DASHBOARD HEADER */
 .dashboardHeader {
   width: 100%;
   background: #027911;
@@ -327,7 +423,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -350,7 +446,8 @@
   gap: 16px;
 }
 
-.menuButton, .notificationButton {
+.menuButton,
+.notificationButton {
   background: transparent;
   border: none;
   color: #fff;
@@ -369,141 +466,110 @@
   border-radius: 50%;
   display: inline-block;
 }
-/* Removido o bloco solto abaixo:
-font-size: 2rem;
-  font-weight: bold;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-*/
 
-/* O restante do CSS permanece igual, sem sidebar */
-@media (max-width: 992px) {
-  .mainContent {
-    padding: 16px 8px;
-  }
-}
-
-@media (max-width: 600px) {
-  .header {
-    font-size: 1.2rem;
-    padding: 16px 8px;
-  }
-}
-
-.statsRow, .chartRow, .infoRow {
+/* GRID DE CARDS/SEÇÕES */
+.statsRow,
+.chartRow,
+.infoRow {
   display: flex;
   gap: 24px;
   width: 100%;
-}
-
-.statsRow, .infoRow {
   justify-content: space-between;
   flex-wrap: wrap;
 }
 
-.statCard, .statBox {
+.statCard,
+.statBox {
   flex: 1;
   min-width: 180px;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
   padding: 24px;
-  margin-bottom: 0;
 }
 
-@media (max-width: 992px) {
-  .statsRow, .chartRow, .infoRow {
-    flex-direction: column;
-    gap: 16px;
-  }
-  .mainContent {
-    padding: 16px 8px;
-  }
-}
-
-@media (max-width: 600px) {
-  .header {
-    font-size: 1.2rem;
-    padding: 16px 8px;
-  }
-  .statCard, .statBox {
-    padding: 12px;
-    font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 1200px) {
-  .statsRow, .chartRow, .infoRow {
+/* RESPONSIVIDADE */
+/* @media (max-width: 1200px) {
+  .statsRow,
+  .chartRow,
+  .infoRow {
     flex-direction: column;
     gap: 20px;
   }
+}
+
+@media (max-width: 992px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .sidebar.open ~ .mainContent {
+    margin-left: 200px;
+    width: calc(100vw - 200px);
+  }
+
   .mainContent {
     padding: 16px 8px;
-  }
-}
-
-@media (max-width: 768px) {
-  .header {
-    font-size: 1.2rem;
-    padding: 12px 4px;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .mainContent {
-    padding: 8px 2px;
-    gap: 16px;
-  }
-  .statCard, .statBox, .chartContainer {
-    min-width: 100%;
-    padding: 10px;
-    font-size: 0.95rem;
-  }
-  .statsRow, .chartRow, .infoRow {
-    flex-direction: column;
-    gap: 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .header {
-    font-size: 1rem;
-    padding: 8px 2px;
-  }
-  .mainContent {
-    padding: 4px 1px;
-    gap: 8px;
-  }
-  .statCard, .statBox, .chartContainer {
-    padding: 6px;
-    font-size: 0.85rem;
   }
 }
 
 @media (max-width: 768px) {
   .sidebar {
     position: absolute;
+    width: 180px;
+    left: -180px;
     z-index: 1001;
-    width: 220px;
-    left: -220px;
     transition: left 0.3s;
   }
+
   .sidebar.open {
     left: 0;
+    width: 180px;
   }
-  .mainContent {
-    padding: 8px 2px;
+
+  .sidebar.closed {
+    left: -180px;
+    width: 0;
+  }
+
+  .mainContent,
+  .sidebar.closed ~ .mainContent,
+  .sidebar.open ~ .mainContent {
     margin-left: 0;
+    width: 100vw;
+    padding: 8px 2px;
+    gap: 16px;
   }
+}
+
+@media (max-width: 600px) {
+  .header {
+    font-size: 1.2rem;
+    padding: 16px 8px;
+  }
+
+  .statCard,
+  .statBox {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainContent {
+    padding: 4px 1px;
+    gap: 8px;
+  }
+} */
+
+@media (max-width: 768px) {
   .navbar {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 8px;
+    left: 0 !important;
+    width: 100% !important;
   }
-  .navbarMenu {
-    width: 100%;
-    justify-content: flex-end;
+
+  .mainContent {
+    margin-left: 0 !important;
+    width: 100% !important;
   }
 }

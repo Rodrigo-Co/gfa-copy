@@ -310,180 +310,180 @@ try {
        
 
         {/* Sidebar */}
-       <aside className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed}`}>
-        <div className={styles.sidebarHeader}>
-          <img
-            className={styles.userImage}
-            src="https://cdn-icons-png.flaticon.com/512/2714/2714708.png"
-            alt="User"
-          />
-          <div className={styles.userInfo}>
-            <h5 className={styles.userName}>{userName}</h5>
-            <p>Leitor do consumo</p>
-          </div>
-        </div>
-
-        <ul className={styles.sidebarMenu}>
-          <li className={styles.menuItem}>
-            <i className="uil uil-estate"></i>
-            <span>Dashboard</span>
-          </li>
-          <li className={styles.menuItem}>
-            <i className="uil uil-calendar-alt"></i>
-            <a href="https://www.supercalendario.com.br/2024" target="_blank" rel="noopener noreferrer">Calendário</a>
-          </li>
-          <li className={styles.menuItem}>
-            <i className="uil uil-envelope"></i>
-            <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer">E-mails</a>
-          </li>
-          <li className={styles.menuItem}>
-            <i className="uil uil-cog"></i>
-            <button onClick={() => navigate('/settings')}>Configurações</button>
-          </li>
-          <li className={styles.menuItem}>
-            <i className="uil uil-map-marker"></i>
-            <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">Mapa</a>
-          </li>
-        </ul>
-
-      </aside>
-      <section className={`${styles.mainContent} ${isOpen ? styles.sidebarOpen : styles.sidebarClosed}`}>
-        <nav className={styles.navbar}>
-          <div className={styles.navbarBrand}>
-            <img src="/Green_Fire_Alert.png" alt="Logo" className={styles.logo} />
-            <span>Green Fire Alert</span>
-          </div>
-          <div className={styles.navbarMenu}>
-            <button
-              className={styles.toggleButton}
-              onClick={toggleSidebar}
-              title="Abrir/Fechar menu"
-            >
-              <i className="uil uil-bars"></i>
-            </button>
-            <div className={styles.dropdownWrapper}>
-              <button
-                className={styles.navLinkDropdown}
-                onClick={() => setDropdownOpen((open) => !open)}
-              >
-                Menu <i className="uil uil-angle-down"></i>
-              </button>
-              {dropdownOpen && (
-                <ul className={styles.dropdownMenu}>
-                  <li>
-                    <button onClick={() => navigate('/settings')}>
-                      <i className="uil uil-user-circle"></i> Minha Conta
-                    </button>
-                  </li>
-                  <li>
-                    <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer">
-                      <i className="uil uil-envelope"></i> Mensagens
-                    </a>
-                  </li>
-                  <li className={styles.divider}></li>
-                  <li>
-                    <button onClick={() => navigate('/login')}>
-                      <i className="uil uil-sign-out-alt"></i> Desconectar
-                    </button>
-                  </li>
-                </ul>
-              )}
-            </div>
-            <button
-              className={styles.toggleButton}
-              onClick={() => alert('Abrir painel de notificações!')}
-              title="Notificações"
-            >
-              <i className="uil uil-bell"></i>
-              <span>0</span>
-            </button>
-          </div>
-        </nav>
-
-        <div className={styles.dashboardContent}>
-          <div className={styles.welcomeBanner}>
-            <h1>Bem vindo ao Dashboard</h1>
-            <p>Olá, {userName}, bem vindo ao seu dashboard!</p>
-          </div>
-
-          <section className={styles.statsSection}>
-            <div className={styles.statsRow}>
-              <div className={styles.statCard}>
-                <i className="uil uil-temperature"></i>
-                <h3>{latestData.temperatura || '--'}°C</h3>
-                <p>Temperatura</p>
-              </div>
-              <div className={styles.statCard}>
-                <i className="uil uil-tear"></i>
-                <h3>{latestData.umidade || '--'}%</h3>
-                <p>Umidade</p>
-              </div>
-              <div className={styles.statCard}>
-                <i className="uil uil-wind"></i>
-                <h3>
-                {latestData.qualidade_do_ar !== undefined
-                ? `${parseFloat(Math.max(0, Math.min(100, 100 - (latestData.qualidade_do_ar / 1000) * 100)).toFixed(1))}%`
-                : '--'}
-                </h3>
-                <p>Qualidade do ar</p>
-              </div>
-              <div className={styles.statCard}>
-                <i className="uil uil-clock"></i>
-                <h3>{lastUpdateTime}</h3>
-                <p>Última atualização</p>
-              </div>
-            </div>
-          </section>
-
-          <section className={styles.chartsSection}>
-            <div className={styles.chartRow}>
-              <div className={styles.chartContainer}>
-                <h3>Balanço dos picos de temperatura e umidade</h3>
-                <div className={styles.chartWrapper}>
-                  <Bar data={chartData.mainChart} options={chartOptions} />
-                </div>
-              </div>
-              <div className={styles.chartContainer}>
-                <h3>Qualidade do ar</h3>
-                <div className={styles.chartWrapper}>
-                  <Line data={chartData.lineChart} options={chartOptions} />
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className={styles.bottomStatsSection}>
-            <div className={styles.statsRow}>
-              <div className={styles.statBox}>
-                <i className="uil uil-comment-exclamation"></i>
-                <div>
-                  <h3>0</h3>
-                  <span>Comunicados</span>
-                  <p>Riscos de incêndio nas últimas 24 horas</p>
-                </div>
-              </div>
-              <div className={styles.statBox}>
-                <i className="uil uil-server-network"></i>
-                <div>
-                  <h3>{Nos}</h3>
-                  <span>Nós</span>
-                  <p>Nós de comunicação ativos</p>
-                </div>
-              </div>
-              <div className={styles.statBox}>
-                <i className="uil uil-lightbulb-alt"></i>
-                <div>
-                  <h3>133</h3>
-                  <span>Dias</span>
-                  <p>Sem alertas</p>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-      </section>
-    </div>
-  );
+       <aside
+         className={`${styles.sidebar} ${!isOpen ? styles.closed : ''}`}
+         style={!isOpen ? { left: '-180px', width: '0' } : {}}
+       >
+         <div className={styles.sidebarHeader}>
+           <img
+             className={styles.userImage}
+             src="https://cdn-icons-png.flaticon.com/512/2714/2714708.png"
+             alt="User"
+           />
+           <div className={styles.userInfo}>
+             <h5 className={styles.userName}>{userName}</h5>
+             <p>Leitor do consumo</p>
+           </div>
+         </div>
+         <ul className={styles.sidebarMenu}>
+           <li className={styles.menuItem}>
+             <i className="uil uil-estate"></i>
+             <span>Dashboard</span>
+           </li>
+           <li className={styles.menuItem}>
+             <i className="uil uil-calendar-alt"></i>
+             <a href="https://www.supercalendario.com.br/2024" target="_blank" rel="noopener noreferrer">Calendário</a>
+           </li>
+           <li className={styles.menuItem}>
+             <i className="uil uil-envelope"></i>
+             <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer">E-mails</a>
+           </li>
+           <li className={styles.menuItem}>
+             <i className="uil uil-cog"></i>
+             <button onClick={() => navigate('/settings')}>Configurações</button>
+           </li>
+           <li className={styles.menuItem}>
+             <i className="uil uil-map-marker"></i>
+             <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">Mapa</a>
+           </li>
+         </ul>
+       </aside>
+       <section
+         className={styles.mainContent}
+         style={!isOpen ? { marginLeft: 0, width: '100vw' } : {}}
+       >
+         <nav className={styles.navbar} style={!isOpen ? { left: 0, width: '100%' } : {}}>
+           <div className={styles.navbarBrand}>
+             <img src="/Green_Fire_Alert.png" alt="Logo" className={styles.logo} />
+             <span>Green Fire Alert</span>
+           </div>
+           <div className={styles.navbarMenu}>
+             <button
+               className={styles.toggleButton}
+               onClick={toggleSidebar}
+               title="Abrir/Fechar menu"
+             >
+               <i className="uil uil-bars"></i>
+             </button>
+             <div className={styles.dropdownWrapper}>
+               <button
+                 className={styles.navLinkDropdown}
+                 onClick={() => setDropdownOpen((open) => !open)}
+               >
+                 Menu <i className="uil uil-angle-down"></i>
+               </button>
+               {dropdownOpen && (
+                 <ul className={styles.dropdownMenu}>
+                   <li>
+                     <button onClick={() => navigate('/settings')}>
+                       <i className="uil uil-user-circle"></i> Minha Conta
+                     </button>
+                   </li>
+                   <li>
+                     <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer">
+                       <i className="uil uil-envelope"></i> Mensagens
+                     </a>
+                   </li>
+                   <li className={styles.divider}></li>
+                   <li>
+                     <button onClick={() => navigate('/login')}>
+                       <i className="uil uil-sign-out-alt"></i> Desconectar
+                     </button>
+                   </li>
+                 </ul>
+               )}
+             </div>
+             <button
+               className={styles.toggleButton}
+               onClick={() => alert('Abrir painel de notificações!')}
+               title="Notificações"
+             >
+               <i className="uil uil-bell"></i>
+               <span>0</span>
+             </button>
+           </div>
+         </nav>
+         <div className={styles.dashboardContent}>
+           <div className={styles.welcomeBanner}>
+             <h1>Bem vindo ao Dashboard</h1>
+             <p>Olá, {userName}, bem vindo ao seu dashboard!</p>
+           </div>
+           <section className={styles.statsSection}>
+             <div className={styles.statsRow}>
+               <div className={styles.statCard}>
+                 <i className="uil uil-temperature"></i>
+                 <h3>{latestData.temperatura || '--'}°C</h3>
+                 <p>Temperatura</p>
+               </div>
+               <div className={styles.statCard}>
+                 <i className="uil uil-tear"></i>
+                 <h3>{latestData.umidade || '--'}%</h3>
+                 <p>Umidade</p>
+               </div>
+               <div className={styles.statCard}>
+                 <i className="uil uil-wind"></i>
+                 <h3>
+                 {latestData.qualidade_do_ar !== undefined
+                 ? `${parseFloat(Math.max(0, Math.min(100, 100 - (latestData.qualidade_do_ar / 1000) * 100)).toFixed(1))}%`
+                 : '--'}
+                 </h3>
+                 <p>Qualidade do ar</p>
+               </div>
+               <div className={styles.statCard}>
+                 <i className="uil uil-clock"></i>
+                 <h3>{lastUpdateTime}</h3>
+                 <p>Última atualização</p>
+               </div>
+             </div>
+           </section>
+           <section className={styles.chartsSection}>
+             <div className={styles.chartRow}>
+               <div className={styles.chartContainer}>
+                 <h3>Balanço dos picos de temperatura e umidade</h3>
+                 <div className={styles.chartWrapper}>
+                   <Bar data={chartData.mainChart} options={chartOptions} />
+                 </div>
+               </div>
+               <div className={styles.chartContainer}>
+                 <h3>Qualidade do ar</h3>
+                 <div className={styles.chartWrapper}>
+                   <Line data={chartData.lineChart} options={chartOptions} />
+                 </div>
+               </div>
+             </div>
+           </section>
+           <section className={styles.bottomStatsSection}>
+             <div className={styles.statsRow}>
+               <div className={styles.statBox}>
+                 <i className="uil uil-comment-exclamation"></i>
+                 <div>
+                   <h3>0</h3>
+                   <span>Comunicados</span>
+                   <p>Riscos de incêndio nas últimas 24 horas</p>
+                 </div>
+               </div>
+               <div className={styles.statBox}>
+                 <i className="uil uil-server-network"></i>
+                 <div>
+                   <h3>{Nos}</h3>
+                   <span>Nós</span>
+                   <p>Nós de comunicação ativos</p>
+                 </div>
+               </div>
+               <div className={styles.statBox}>
+                 <i className="uil uil-lightbulb-alt"></i>
+                 <div>
+                   <h3>133</h3>
+                   <span>Dias</span>
+                   <p>Sem alertas</p>
+                 </div>
+               </div>
+             </div>
+           </section>
+         </div>
+       </section>
+     </div>
+   );
 };
 
 export default Dashboard;
