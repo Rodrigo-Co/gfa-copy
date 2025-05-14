@@ -49,18 +49,34 @@ const Settings = () => {
       if (!userSession) throw new Error('Sessão do usuário não encontrada.');
 
       const userData = JSON.parse(userSession);
-      const { error } = await supabase
+
+      // Atualizar nome no banco de dados (pode ser vazio)
+      await supabase
         .from('usuarios')
         .update({ nome })
-        .eq('email', userData.email); // Atualizar nome no banco de dados
+        .eq('email', userData.email);
 
-      if (error) throw error;
+      // Atualizar senha se o campo estiver preenchido
+      if (novaSenha && novaSenha.length > 0) {
+        const { error: passwordError } = await supabase.auth.updateUser({
+          password: novaSenha,
+        });
+        if (passwordError) {
+          console.error('Erro ao atualizar senha:', passwordError.message);
+          alert('Erro ao atualizar senha: ' + passwordError.message);
+          return;
+        }
+        setNovaSenha(""); // Limpa o campo após sucesso
+        alert('Senha alterada com sucesso! Faça login novamente.');
+        navigate('/'); // Redireciona para o login
+        return; // Não executa o restante
+      }
 
       sessionStorage.setItem('userName', nome); // Atualizar o nome na sessão
       alert('Perfil atualizado com sucesso!');
     } catch (err) {
       console.error('Erro ao atualizar perfil:', err.message);
-      alert('Erro ao atualizar perfil');
+      alert('Erro ao atualizar perfil: ' + err.message);
     }
   };
 
@@ -137,7 +153,6 @@ const Settings = () => {
                     id="fullName"
                     value={nome}
                     onChange={(e) => setName(e.target.value)}
-                    required
                   />
                 </div>
                 <div className={styles.formGroup}>
