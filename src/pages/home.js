@@ -90,8 +90,8 @@ const Inicio = () => {
         </button>
       </nav>
 
+      {/* armengue aqui */}
       <section id="desbug" >
-        <p style={{ color: 'black'}}>Testando conteúdo visível</p>
       </section>
 
       <section id="inicio"  style={{backgroundImage: `url(${backgroundImage})`}}>
