@@ -151,7 +151,7 @@ body {
 }
 
 .dashboardContent {
-  margin-top: 80px; /* ou ajuste conforme a altura da navbar */
+  margin-top: 250px; /* ou ajuste conforme a altura da navbar (estava 80)*/
   width: 100%;
 }
 
