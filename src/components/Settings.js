@@ -31,7 +31,7 @@ const Settings = () => {
           } else {
             setName(data.nome || '');
             setEmail(data.email || ''); // já que buscamos pelo localStorage
-            setNos(data.nos || 1);
+            setNos(Number(data.nos || 1));
             setCodigoCentral(data.codigo_central || '');
           }
         }
@@ -60,20 +60,17 @@ const Settings = () => {
 
       // Atualizar senha se o campo estiver preenchido
       if (novaSenha && novaSenha.length > 0) {
-        const { error: passwordError } = await supabase.auth.updateUser({
-          password: novaSenha,
-        });
-        if (passwordError) {
-          console.error('Erro ao atualizar senha:', passwordError.message);
-          alert('Erro ao atualizar senha: ' + passwordError.message);
-          return;
-        }
-        setNovaSenha(""); // Limpa o campo após sucesso
-        alert('Senha alterada com sucesso! Faça login novamente.');
-        navigate('/'); // Redireciona para o login
-        return; // Não executa o restante
-      }
+        await supabase
+          .from('usuarios')
+          .update({ senha: novaSenha }) // <- substitui o campo 'senha'
+          .eq('email', userData.email);
 
+        setNovaSenha(""); // Limpa o campo após sucesso
+        sessionStorage.clear();
+        alert('Senha alterada com sucesso!');
+        navigate('/');
+      return;
+      }
       sessionStorage.setItem('userName', nome); // Atualizar o nome na sessão
       alert('Perfil atualizado com sucesso!');
     } catch (err) {
@@ -195,7 +192,7 @@ const Settings = () => {
                     type="number"
                     id="Nos"
                     value={Nos}
-                    onChange={(e) => setNos(parseInt(e.target.value) || 1)}
+                    onChange={(e) => setNos(parseInt(e.target.value))}
                     min="1"
                   />
                 </div>
