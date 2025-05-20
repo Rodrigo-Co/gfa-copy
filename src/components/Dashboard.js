@@ -50,6 +50,7 @@ const Dashboard = () => {
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('Visitante');
   const [Nos, setNos] = useState(1);
+  const [deviceId, setDeviceId] = useState('');
   const [isOpen, setIsOpen] = useState(true); // <-- AQUI o estado da sidebar
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -188,10 +189,17 @@ try {
 
 
   const fetchSensorData = useCallback(async () => {
+    if(!deviceId){
+      setSensorData([]);
+      setLoading(false);
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('sensor_data')
         .select('*')
+        .eq('codigo_central', deviceId)
         .order('timestamp', { ascending: false })
         .limit(10);
 
@@ -251,7 +259,7 @@ try {
       setError(err.message);
       setLoading(false);
     }
-  }, [sendEmailAlert, sendSmsAlert]);
+  }, [deviceId, sendEmailAlert, sendSmsAlert]);
 
   const fetchUserData = useCallback(async () => {
 
@@ -260,6 +268,7 @@ try {
       console.warn('Usuário não encontrado na sessão');
       setUserName('Visitante');
       setUserEmail('');
+      setDeviceId('');
       return;
     }
 
@@ -268,7 +277,7 @@ try {
   try {
     const { data, error } = await supabase
       .from('usuarios')
-      .select('nome, nos')
+      .select('nome, nos, codigo_central')
       .eq('email', email)
       .single();
 
@@ -276,58 +285,74 @@ try {
       console.error('Erro ao buscar dados do usuário:', error.message);
       setUserName('Visitante');
       setUserEmail('');
+      setDeviceId('');
+      setLoading(false);
     } else {
       setUserEmail(email);
       if (data?.nome) setUserName(data.nome);
       if (data?.nos !== undefined) setNos(data.nos);
+      if (data?.codigo_central) setDeviceId(data.codigo_central);
+      setLoading(false);
     }
   } catch (err) {
     console.error('Erro ao buscar dados do usuário:', err);
+    setLoading(false);
   }
-
-    /*try {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getUser();
-  
-      if (sessionError || !sessionData?.session) {
-        console.warn('Usuário não autenticado ou sessão ausente.');
-      return;
-      }
-
-      const email = sessionData.session.user.email;
-    if (!email) {
-      console.error('Email não encontrado');
-      return;
-    }
-  
-        const { data, error } = await supabase
-          .from('usuarios') // nome da sua tabela
-          .select('nome, nos')
-          .eq('email', email)
-          .single();
-  
-        if (error) {
-          console.error('Erro ao buscar dados do usuário:', error.message);
-        } else {
-          setUserEmail(email);
-          if (data.nome) setUserName(data.nome);
-          if (data.nos !== undefined) setNos(data.nos);
-        }
-      
-    } catch (err) {
-      console.error('Erro ao buscar dados do usuário:', err);
-    }*/
   }, []);
     
     
-    
+    useEffect(() => {
+  fetchUserData();
+}, [fetchUserData]);
 
-  useEffect(() => {
-    fetchSensorData();
-    fetchUserData();
 
-    const interval = setInterval(fetchSensorData, 30000);
-    return () => clearInterval(interval);
-  }, [fetchSensorData, fetchUserData]);
+useEffect(() => {
+  if (!deviceId) {
+    setSensorData([]);
+    setChartData({
+      mainChart: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Temperatura (°C)',
+            data: [],
+            backgroundColor: '#0d6efd',
+            borderColor: 'transparent',
+            borderWidth: 2.5,
+            barPercentage: 0.4,
+          },
+          {
+            label: 'Umidade (%)',
+            data: [],
+            backgroundColor: '#dc3545',
+            borderColor: 'transparent',
+            borderWidth: 2.5,
+            barPercentage: 0.4,
+          },
+        ],
+      },
+      lineChart: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Qualidade do ar (%)',
+            data: [],
+            lineTension: 0.2,
+            borderColor: '#d9534f',
+            borderWidth: 1.5,
+            backgroundColor: 'transparent',
+          },
+        ],
+      },
+    });
+    return;
+  }
+
+  fetchSensorData();
+  const interval = setInterval(fetchSensorData, 30000);
+  return () => clearInterval(interval);
+
+}, [deviceId, fetchSensorData]);
 
   if (loading) return <div className={styles.loading}>Carregando...</div>;
   if (error) return <div className={styles.error}>Erro: {error}</div>;

@@ -9,6 +9,7 @@ const Settings = () => {
   const [nome, setName] = useState('');
   const [email, setEmail] = useState('');
   const [Nos, setNos] = useState(1);
+  const [CodigoCentral, setCodigoCentral] = useState('');
   const [error, setError] = useState('');
   const [novaSenha, setNovaSenha] = useState(""); // <-- Add this line
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const Settings = () => {
           const userData = JSON.parse(userSession);
           const { data, error } = await supabase
             .from('usuarios')
-            .select('nome, email, nos') // nomes certos da sua tabela
+            .select('nome, email, nos, codigo_central') // nomes certos da sua tabela
             .eq('email', userData.email)
             .single();
 
@@ -31,6 +32,7 @@ const Settings = () => {
             setName(data.nome || '');
             setEmail(data.email || ''); // já que buscamos pelo localStorage
             setNos(data.nos || 1);
+            setCodigoCentral(data.codigo_central || '');
           }
         }
       } catch (err) {
@@ -93,15 +95,17 @@ const Settings = () => {
         alert('Por favor, insira uma quantidade válida de "Nos".');
         return;
       }
+      
 
       const { error } = await supabase
         .from('usuarios')
-        .update({ nos: Nos })
+        .update({ nos: Nos, codigo_central: CodigoCentral })
         .eq('email', userData.email); // Atualizar no banco de dados
 
       if (error) throw error;
 
       sessionStorage.setItem('Nos', Nos); // Salvar a quantidade de "Nos" na sessão
+      sessionStorage.setItem('deviceId', CodigoCentral); 
       alert('Configurações salvas com sucesso!');
     } catch (err) {
       console.error('Erro ao salvar configurações:', err.message);
@@ -193,6 +197,15 @@ const Settings = () => {
                     value={Nos}
                     onChange={(e) => setNos(parseInt(e.target.value) || 1)}
                     min="1"
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="CodigoCentral">Código da sua central:</label>
+                  <input
+                    type="text"
+                    id="CodigoCentral"
+                    value={CodigoCentral}
+                    onChange={(e) => setCodigoCentral(e.target.value)}
                   />
                 </div>
                 <div className={styles.buttonGroup}>
