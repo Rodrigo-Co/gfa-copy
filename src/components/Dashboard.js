@@ -441,7 +441,7 @@ useEffect(() => {
                    </li>
                    <li className={styles.divider}></li>
                    <li>
-                     <button onClick={() => navigate('/login')}>
+                     <button onClick={() => navigate('/')}>
                        <i className="uil uil-sign-out-alt"></i> Desconectar
                      </button>
                    </li>
