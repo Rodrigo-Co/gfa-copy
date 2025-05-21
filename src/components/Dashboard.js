@@ -387,7 +387,7 @@ useEffect(() => {
            </li>
            <li className={styles.menuItem}>
              <i className="uil uil-calendar-alt"></i>
-             <a href="https://www.supercalendario.com.br/2024" target="_blank" rel="noopener noreferrer">Calendário</a>
+             <a href="https://www.supercalendario.com.br/2025" target="_blank" rel="noopener noreferrer">Calendário</a>
            </li>
            <li className={styles.menuItem}>
              <i className="uil uil-envelope"></i>
