@@ -114,7 +114,7 @@ const Inicio = () => {
           <button className='btn-default' onClick={handleSaibaMaisClick}>Saiba Mais</button>
         </div>
         <div className="card nossa-equipe">
-          <h2>Nossa Equipe</h2>
+          <h2>Nossa Equipe Completa</h2>
           <p>
             <strong>Anna Victoria</strong> - Designer<br />
             <strong>Caio Ribeiro</strong> - Desenvolvedor de Hardware<br />
