@@ -3,6 +3,22 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import App from './App';
 
+beforeAll(() => {
+    // Remove aviso do React Router Future Flag
+    const originalWarn = console.warn;
+  console.warn = (...args) => {
+    if (
+      typeof args[0] === 'string' &&
+      args[0].includes('No routes matched location')
+    ) {
+      return;
+    }
+    originalWarn(...args);
+  };
+  window.alert = jest.fn();
+
+  });
+
 // Mocks dos componentes usados nas rotas
 jest.mock('./components/login', () => () => <div>Login Page</div>);
 jest.mock('./components/register', () => () => <div>Register Page</div>);

@@ -6,6 +6,20 @@ import { supabase } from '../lib/supabaseClient';
 
 jest.mock('../lib/supabaseClient');
 
+beforeAll(() => {
+    // Remove aviso do React Router Future Flag
+    const originalWarn = console.warn;
+    console.warn = (...args) => {
+      if (
+        args[0] &&
+        args[0].includes('React Router Future Flag Warning')
+      ) {
+        return;
+      }
+      originalWarn(...args);
+    };
+  });
+
 const mockNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({

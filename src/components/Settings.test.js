@@ -17,6 +17,8 @@ beforeAll(() => {
       }
       originalWarn(...args);
     };
+  window.alert = jest.fn();
+
   });
   
 
